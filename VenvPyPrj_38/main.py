@@ -1,6 +1,7 @@
 # pi=3.14159
 # print(pi**2/2)
 # print(round(pi**2/2))
+from selenium.webdriver import Keys
 
 # pi = 31.4159265
 # print ("%.4e" % (pi))
@@ -928,3 +929,17 @@ print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 # Директория logs хранит логи коммитов.
 # В директории info расположен файл с глобальными настройкам игнорирования файлов. Он позволяет исключить файлы, которые вы не хотите помещать в .gitignore. Позднее мы остановимся на назначении файла .gitignore.
 # В директории hooks располагаются клиентские и серверные триггеры. Желающие прочитать про них могут обратиться к руководству по Git.
+
+# git branch sf-kornyushin-dev1
+# python -m pip install selenium
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+
+from time import sleep
+
+driver = webdriver.Chrome("/Users/пк/PythonProjects/SkillFactory/VenvPyPrj_38/chromedriver.exe")
+driver.get("https://google.com")
+driver.find_element(By.XPATH, "//*[@id='APjFqb']").send_keys('SkillFactory' + Keys.RETURN)
+sleep(2)
+driver.save_screenshot('sf.png')
+driver.quit()
