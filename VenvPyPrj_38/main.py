@@ -1058,7 +1058,10 @@ print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 # b = "2 4 6 8 10 12" #input("Введите вторую последовательность целых чисел: ")
 # a_set, b_set = set(list(a.split())), set(list(b.split())) # используем множественное присваивание
 # a_and_b = a_set.symmetric_difference(b_set)
+# res_list = list(map(int, a_and_b))
+# res_list.sort()
 # print(a_and_b)
+# print(res_list)
 
 # Задание 5.3.2
 # Проверьте, что выведет пример кода, если переменная будет иметь значение
@@ -1299,15 +1302,15 @@ print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 # Задание 5.3.18
 # Реализуйте программу, которая сжимает последовательность символов. На вход подаётся последовательность вида:
-inpTxt = "aaabbccccdaaa"
-ResTxt = ''
-j = 0
-count = 0
-for i in inpTxt:
-    if j < (len(inpTxt) - 1) and inpTxt[j] == inpTxt[j+1]:
-        count += 1
-    else:
-        ResTxt += inpTxt[j] + str(count + 1)
-        count = 0
-    j += 1
-print('ResTxt = ', ResTxt) # ResTxt = a3b2c4d1a3
+# inpTxt = "aaabbccccdaaa"
+# ResTxt = ''
+# j = 0
+# count = 0
+# for i in inpTxt:
+#     if j < (len(inpTxt) - 1) and inpTxt[j] == inpTxt[j+1]:
+#         count += 1
+#     else:
+#         ResTxt += inpTxt[j] + str(count + 1)
+#         count = 0
+#     j += 1
+# print('ResTxt = ', ResTxt) # ResTxt = a3b2c4d1a3
