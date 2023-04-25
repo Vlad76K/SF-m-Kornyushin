@@ -36,11 +36,13 @@
 # В случае, если возникают непредвиденные ситуации, выбрасывать и обрабатывать исключения.
 # Буквой X помечаются подбитые корабли, буквой T — промахи.
 # Побеждает тот, кто быстрее всех разгромит корабли противника.
+import sys
+
 from numpy import random
 
 
 class SeaBattle:
-    _user = True
+    _ErrorId = 0
     _ship_list = []
     _pick_list = []
     def __init__(self, x, y, z, bf_list, pick_list, pick_list1):
@@ -60,14 +62,22 @@ class SeaBattle:
     def check_pick_error(self):
         ...
     def pick_ship(self): # здесь мы ищем в указанном месте корабль компьютера (визульно не отображается)
+        # выбор поля по которому стреляем, в зависимости от того, чей ход
         if self.z:
-            pl = self.pick_list1
+            pl = self.pick_list1 # если ходит игрок
         else:
-            pl = self.bf_list
-        if pl[self.x][self.y] == '■':
+            pl = self.bf_list # если ходит компьютер
+        if pl[self.x][self.y] == 'X' or pl[self.x][self.y] == 'T': # уже били по этой точке
+            self._ErrorId = 1
+            raise ValueError('По данной ячейке уже стреляли')
+        elif pl[self.x][self.y] == '■': # попали по кораблю
             return 'X'
-        else:
+        elif pl[self.x][self.y] == 'О': # в клетку еще не били и на ней нет корабли
             return 'T'
+        else:
+            self._ErrorId = 2
+            raise ValueError('Ошибка выбора цели! Клетка за пределами поля')
+
     @property
     def pick_cell_user(self): # ход игрока - выстрел по ячейке
         return 'X' #????????????????????????????????????????????????????
@@ -77,21 +87,25 @@ class SeaBattle:
             raise ValueError("По данной ячейке уже стреляли")
         else:
             self.pick_list[self.x][self.y] = value
+
     @property
     def pick_cell_comp(self): # ход игрока - выстрел по ячейке
         return 'X' #????????????????????????????????????????????????????
+
     @pick_cell_comp.setter
     def pick_cell_comp(self, value): # ход игрока - выстрел по ячейке
         if self.bf_list[self.x][self.y] == value:
             raise ValueError("По данной ячейке уже стреляли")
         else:
             self.bf_list[self.x][self.y] = value
+
     def check_win_comp(self): # проверки достижения победы
         for i in range(6):
             if '■' in self.bf_list[i]: # если находим "живой участок" у выставленных кораблей - нет победы у компа
                 return True
         print('Компьютер выиграл!')
         return False
+
     def check_win_user(self):  # проверки достижения победы
         sum_el = 0
         for i in range(6):
@@ -102,29 +116,73 @@ class SeaBattle:
             print('Поздравляю! Вы победили!')
             return False
         return True
+
 class Ship: # класс размещения кораблей на поле
-    def __init__(self, x, y, bf_list):
+    def __init__(self, x, y, bf_list, _ship_set):
         self.x = x
         self.y = y
         self.bf_list = bf_list
+        self._ship_set = _ship_set
+    def we_can_use_this_cell(self):
+
+        ...
+    @property
+    def set_ship(self):  # расставим корабли
+        ...
+    @set_ship.setter
     def set_ship(self): # расставим корабли
-        self.bf_list[self.x][self.y] = '■'
+        sb_cls = SeaBattle(0, 0, True, user_data, pick_visual, pick_hide)
+        sb_cls.show()
+
+        # ставим 3-х палубник
+        for i in range(3):
+        while i < 3:
+            print('Ставим трехпалубник (один)')
+            cell_coord_list = list(input(f'Введите координаты ячейки {i+1}: ').split())
+            if sb_cls.bf_list[cell_coord_list[0]][cell_coord_list[1]] == 'О': # ячейка свободна
+                if i == 0:
+                    sb_cls.bf_list[cell_coord_list[0]][cell_coord_list[1]] = '■'
+                    self._ship_set[dic_key] = [0, 0]
+                    i += 1
+                elif i == 1:
+                    x3 = cell_coord_list[0]
+                    x4 = cell_coord_list[1]
+                    if x3 ==
+                    cell_coord_list[1]
+                else:
+                if i == 0:
+                    x1 = cell_coord_list[0]
+                    x2 = cell_coord_list[1]
+                    sb_cls.bf_list[cell_coord_list[0]][cell_coord_list[1]] = '■'
+                    i += 1
+                elif i == 1:
+                    x3 = cell_coord_list[0]
+                    x4 = cell_coord_list[1]
+                    if x3 ==
+                    cell_coord_list[1]
+                else:
+                    ...
+                if cell_coord_list[0] == 1 or cell_coord_list[0] == 6:
+                    ...
+            else: # сюда уже "ставили корабль"
+                ...
+
 
 # user_data = [
+#     ['■', '■', '■', 'О', 'О', 'О'],
+#     ['О', 'О', 'О', 'О', '■', '■'],
 #     ['О', 'О', 'О', 'О', 'О', 'О'],
-#     ['О', 'О', 'О', 'О', 'О', 'О'],
-#     ['О', 'О', 'О', 'О', 'О', 'О'],
-#     ['О', 'О', 'О', 'О', 'О', 'О'],
-#     ['О', 'О', 'О', 'О', 'О', 'О'],
-#     ['О', 'О', 'О', 'О', 'О', 'О']
+#     ['■', 'О', '■', 'О', '■', 'О'],
+#     ['О', 'О', 'О', 'О', '■', 'О'],
+#     ['■', 'О', '■', 'О', 'О', 'О']
 # ]
 user_data = [
-    ['■', '■', '■', 'О', 'О', 'О'],
-    ['О', 'О', 'О', 'О', '■', '■'],
     ['О', 'О', 'О', 'О', 'О', 'О'],
-    ['■', 'О', '■', 'О', '■', 'О'],
-    ['О', 'О', 'О', 'О', '■', 'О'],
-    ['■', 'О', '■', 'О', 'О', 'О']
+    ['О', 'О', 'О', 'О', 'О', 'О'],
+    ['О', 'О', 'О', 'О', 'О', 'О'],
+    ['О', 'О', 'О', 'О', 'О', 'О'],
+    ['О', 'О', 'О', 'О', 'О', 'О'],
+    ['О', 'О', 'О', 'О', 'О', 'О']
 ]
 pick_visual = [
     ['О', 'О', 'О', 'О', 'О', 'О'],
@@ -142,22 +200,38 @@ pick_hide = [
     ['О', 'О', 'О', 'О', '■', 'О'],
     ['О', 'О', 'О', '■', 'О', '■']
 ]
+_comp_pick = {
+     1:[1, 1],  2:[1, 2],  3:[1, 3],  4:[1, 4],  5:[1, 5],  6:[1, 6],
+     7:[2, 1],  8:[2, 2],  9:[2, 3], 10:[2, 4], 11:[2, 5], 12:[2, 6],
+    13:[3, 1], 14:[3, 2], 15:[3, 3], 16:[3, 4], 17:[3, 5], 18:[3, 6],
+    19:[4, 1], 20:[4, 2], 21:[4, 3], 22:[4, 4], 23:[4, 5], 24:[4, 6],
+    25:[5, 1], 26:[5, 2], 27:[5, 3], 28:[5, 4], 29:[5, 5], 30:[5, 6],
+    31:[6, 1], 32:[6, 2], 33:[6, 3], 34:[6, 4], 35:[6, 5], 36:[6, 6]
+}
+_set_ship = {
+     1:[1, 1],  2:[1, 2],  3:[1, 3],  4:[1, 4],  5:[1, 5],  6:[1, 6],
+     7:[2, 1],  8:[2, 2],  9:[2, 3], 10:[2, 4], 11:[2, 5], 12:[2, 6],
+    13:[3, 1], 14:[3, 2], 15:[3, 3], 16:[3, 4], 17:[3, 5], 18:[3, 6],
+    19:[4, 1], 20:[4, 2], 21:[4, 3], 22:[4, 4], 23:[4, 5], 24:[4, 6],
+    25:[5, 1], 26:[5, 2], 27:[5, 3], 28:[5, 4], 29:[5, 5], 30:[5, 6],
+    31:[6, 1], 32:[6, 2], 33:[6, 3], 34:[6, 4], 35:[6, 5], 36:[6, 6]
+}
 try:
     sb_cls = SeaBattle(0, 0, True, user_data, pick_visual, pick_hide)
     sb_cls.show()
 
-    s_cls = Ship(0, 0, user_data)
+    s_cls = Ship(0, 0, user_data, _set_ship)
 
     # Распологаем корабли на поле
     print('Поставьте корабли на поле: 1 корабль на 3 клетки, 2 корабля на 2 клетки, 4 корабля на одну клетку')
     print('Без диагональных и Г-образных')
-    # for i in range(11):
-        # cell_coord_list = list(input('Введите координаты ячейки: ').split())
-        # sb_cls.x = int(cell_coord_list[0])-1 # -1 из-за смещения индексов элемента массива по отношению к системе координат нашего поля
-        # sb_cls.y = int(cell_coord_list[1])-1 # -1 из-за смещения индексов элемента массива по отношению к системе координат нашего поля
-        # s_cls.x = int(cell_coord_list[0])-1 # -1 из-за смещения индексов элемента массива по отношению к системе координат нашего поля
-        # s_cls.y = int(cell_coord_list[1])-1 # -1 из-за смещения индексов элемента массива по отношению к системе координат нашего поля
-        # s_cls.set_ship()
+    for i in range(11):
+        cell_coord_list = list(input('Введите координаты ячейки: ').split())
+        sb_cls.x = int(cell_coord_list[0])-1 # -1 из-за смещения индексов элемента массива по отношению к системе координат нашего поля
+        sb_cls.y = int(cell_coord_list[1])-1 # -1 из-за смещения индексов элемента массива по отношению к системе координат нашего поля
+        s_cls.x = int(cell_coord_list[0])-1 # -1 из-за смещения индексов элемента массива по отношению к системе координат нашего поля
+        s_cls.y = int(cell_coord_list[1])-1 # -1 из-за смещения индексов элемента массива по отношению к системе координат нашего поля
+        s_cls.set_ship()
     sb_cls.show() # М/б стоит отрисовывать поле после ввода кажой точки ? Возможно это будет нагляднее
 
     # начинаем батл =)
@@ -169,9 +243,16 @@ try:
             print('Ход игрока!')
             cell_coord_list = list(input('Куда стреляем? Координаты: ').split())
         else:
-            print('Ход компьютера!')
-            cell_coord_list = [random.randint(1, 6), random.randint(1, 6)]
-            print(cell_coord_list)
+            dic_key = random.randint(1, 36)
+            if list(_comp_pick.get(dic_key)) == [0, 0]:
+                while list(_comp_pick.get(dic_key)) == [0, 0]:
+                    if dic_key >= 36:
+                        dic_key = 1
+                    dic_key += 1
+            cell_coord_list = list(_comp_pick.get(dic_key))
+            _comp_pick[dic_key] = [0, 0]
+            print(f'Ход компьютера! Ячейка {cell_coord_list}')
+
         sb_cls.x = int(cell_coord_list[0]) - 1  # -1 из-за смещения индексов элемента массива
                                                 # по отношению к системе координат нашего поля
         sb_cls.y = int(cell_coord_list[1]) - 1  # -1 из-за смещения индексов элемента массива
@@ -182,9 +263,20 @@ try:
             sb_cls.pick_cell_comp = sb_cls.pick_ship()
         sb_cls.show()
         k += 1
+
 except ValueError:
-    # print('\nКод отлова')
-    print()
+    if sb_cls._ErrorId == 1:
+        print('\nПо данной ячейке уже стреляли!!!')
+    elif sb_cls._ErrorId == 2:
+        print('\nОшибка выбора цели! Клетка за пределами поля!')
+    else:
+        print('\nКод отлова')
+        err = sys.excepthook
+    # IndexError / TypeError
+    # tb = sys.exception().__traceback__
+    # raise OtherException(...).with_traceback(tb)
+    # tb = sys.
+    # raise IndexError('Не корректные координаты!')
 else:
     print('\nКод, который выполнится если всё хорошо прошло в блоке try')
 finally:
