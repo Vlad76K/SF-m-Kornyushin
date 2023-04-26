@@ -117,56 +117,127 @@ class SeaBattle:
             return False
         return True
 
+class CheckUseCell:
+    def __init__(self, x, y, first_x, first_y, i, ship_frize_list): #, ship_element_list):
+        self.x = x
+        self.y = y
+        self.first_x = first_x
+        self.first_y = first_y
+        self.i = i
+        self.ship_frize_list = ship_frize_list
+        # self.ship_element_list = ship_element_list
+
+    def we_can_use_this_cell(self):
+        if not (0 <= self.x < 6 and 0 <= self.y < 6):
+            print('Координаты вне поля! Повторите выбор!')
+            return False
+
+        if sb_cls.bf_list[self.x][self.y] != 'О':  # ячейка не свободна
+            print('Ячейка уже занята. Выберите другую')
+            return False
+
+        if self.i == 0:
+            # необходимо проверить четыре ячейки (по две по горизонтали и вертикали) - не заняты ли
+            # нельзя распологать корабли впритык (возможно, исключая диагональ)
+            # при этом нужно исключать из рассмотрения уже установленные блоки того же корабля
+            if (self.x == 0 or sb_cls.bf_list[self.x-1][self.y] != '■' or (self.x-1, self.y) in self.ship_frize_list) and \
+               (self.x == 5 or sb_cls.bf_list[self.x+1][self.y] != '■' or (self.x+1, self.y) in self.ship_frize_list) and \
+               (self.y == 0 or sb_cls.bf_list[self.x][self.y-1] != '■' or (self.y-1, self.y) in self.ship_frize_list) and \
+               (self.y == 5 or sb_cls.bf_list[self.x][self.y+1] != '■' or (self.y+1, self.y) in self.ship_frize_list):
+                return True
+            else:
+                print('123')
+                return False
+        else:
+            if self.x == self.first_x or self.y == self.first_y: # либо вертикаль, либо горизонталь
+                if self.x == 0 and self.y == 0: # верхний край поля
+                    # print(5)
+                    return (((sb_cls.bf_list[self.x + 1][self.y] != '■') or (sb_cls.bf_list[self.x + 1][self.y] == '■' and self.x + self.i == self.first_x and self.y == self.first_y)) and \
+                            ((sb_cls.bf_list[self.x][self.y + 1] != '■') or (sb_cls.bf_list[self.x][self.y + 1] == '■' and self.x == self.first_x and self.y + self.i == self.first_y)))
+                elif self.x == 0 and self.y == 5: # верхний край поля
+                    # print(6)
+                    return (((sb_cls.bf_list[self.x + 1][self.y] != '■') or (sb_cls.bf_list[self.x + 1][self.y] == '■' and self.x + self.i == self.first_x and self.y == self.first_y)) and \
+                            ((sb_cls.bf_list[self.x][self.y - 1] != '■') or (sb_cls.bf_list[self.x][self.y - 1] == '■' and self.x == self.first_x and self.y - self.i == self.first_y)))
+                elif self.x == 5 and self.y == 0:  # верхний край поля
+                    # print(7)
+                    return (((sb_cls.bf_list[self.x - 1][self.y] != '■') or (sb_cls.bf_list[self.x - 1][self.y] == '■' and self.x - self.i == self.first_x and self.y == self.first_y)) and \
+                            ((sb_cls.bf_list[self.x][self.y + 1] != '■') or (sb_cls.bf_list[self.x][self.y + 1] == '■' and self.x == self.first_x and self.y + self.i == self.first_y)))
+                elif self.x == 5 and self.y == 5:  # верхний край поля
+                    # print(8)
+                    return (((sb_cls.bf_list[self.x - 1][self.y] != '■') or (sb_cls.bf_list[self.x - 1][self.y] == '■' and self.x - self.i == self.first_x and self.y == self.first_y)) and \
+                            ((sb_cls.bf_list[self.x][self.y - 1] != '■') or (sb_cls.bf_list[self.x][self.y - 1] == '■' and self.x == self.first_x and self.y - self.i == self.first_y)))
+                elif self.x == 0:  # верхний край поля
+                    # print(9)
+                    return (((sb_cls.bf_list[self.x + 1][self.y] != '■') or (sb_cls.bf_list[self.x + 1][self.y] == '■' and self.x + self.i == self.first_x and self.y == self.first_y)) and \
+                            ((sb_cls.bf_list[self.x][self.y - 1] != '■') or (sb_cls.bf_list[self.x][self.y - 1] == '■' and self.x == self.first_x and self.y - self.i == self.first_y)) and \
+                            ((sb_cls.bf_list[self.x][self.y + 1] != '■') or (sb_cls.bf_list[self.x][self.y + 1] == '■' and self.x == self.first_x and self.y + self.i == self.first_y)))
+                elif self.y == 0: # левый край
+                    # print(10)
+                    return (((sb_cls.bf_list[self.x - 1][self.y] != '■') or (sb_cls.bf_list[self.x - 1][self.y] == '■' and self.x - self.i == self.first_x and self.y == self.first_y)) and \
+                            ((sb_cls.bf_list[self.x + 1][self.y] != '■') or (sb_cls.bf_list[self.x + 1][self.y] == '■' and self.x + self.i == self.first_x and self.y == self.first_y)) and \
+                            ((sb_cls.bf_list[self.x][self.y + 1] != '■') or (sb_cls.bf_list[self.x][self.y + 1] == '■' and self.x == self.first_x and self.y + self.i == self.first_y)))
+                elif self.x == 5: # нижний край
+                    # print(11)
+                    return (((sb_cls.bf_list[self.x - 1][self.y] != '■') or (sb_cls.bf_list[self.x - 1][self.y] == '■' and self.x - self.i == self.first_x and self.y == self.first_y)) and \
+                            ((sb_cls.bf_list[self.x][self.y - 1] != '■') or (sb_cls.bf_list[self.x][self.y - 1] == '■' and self.x == self.first_x and self.y - self.i == self.first_y)) and \
+                            ((sb_cls.bf_list[self.x][self.y + 1] != '■') or (sb_cls.bf_list[self.x][self.y + 1] == '■' and self.x == self.first_x and self.y + self.i == self.first_y)))
+                elif self.y == 5: # правый край
+                    # print(12)
+                    return (((sb_cls.bf_list[self.x - 1][self.y] != '■') or (sb_cls.bf_list[self.x - 1][self.y] == '■' and self.x - self.i == self.first_x and self.y == self.first_y)) and \
+                            ((sb_cls.bf_list[self.x + 1][self.y] != '■') or (sb_cls.bf_list[self.x + 1][self.y] == '■' and self.x + self.i == self.first_x and self.y == self.first_y)) and \
+                            ((sb_cls.bf_list[self.x][self.y - 1] != '■') or (sb_cls.bf_list[self.x][self.y - 1] == '■' and self.x == self.first_x and self.y - self.i == self.first_y)))
+                else:
+                    # print(13)
+                    return (((sb_cls.bf_list[self.x - 1][self.y] != '■') or (sb_cls.bf_list[self.x - 1][self.y] == '■' and self.x - self.i == self.first_x and self.y == self.first_y)) and \
+                            ((sb_cls.bf_list[self.x + 1][self.y] != '■') or (sb_cls.bf_list[self.x + 1][self.y] == '■' and self.x + self.i == self.first_x and self.y == self.first_y)) and \
+                            ((sb_cls.bf_list[self.x][self.y - 1] != '■') or (sb_cls.bf_list[self.x][self.y - 1] == '■' and self.x == self.first_x and self.y - self.i == self.first_y)) and \
+                            ((sb_cls.bf_list[self.x][self.y + 1] != '■') or (sb_cls.bf_list[self.x][self.y + 1] == '■' and self.x == self.first_x and self.y + self.i == self.first_y)))
+            else:  # диогональ - ошибка
+                print('По диагонали размещать нельзя!')
+                return False
+
 class Ship: # класс размещения кораблей на поле
-    def __init__(self, x, y, bf_list, _ship_set):
+    def __init__(self, x, y, bf_list, _ship_set, ship_l):
         self.x = x
         self.y = y
         self.bf_list = bf_list
         self._ship_set = _ship_set
-    def we_can_use_this_cell(self):
+        self.ship_l = ship_l
 
-        ...
-    @property
-    def set_ship(self):  # расставим корабли
-        ...
-    @set_ship.setter
     def set_ship(self): # расставим корабли
         sb_cls = SeaBattle(0, 0, True, user_data, pick_visual, pick_hide)
-        sb_cls.show()
+        sb_err = CheckUseCell(0, 0, 0, 0, 0, _ship_frize_list) #, _ship_element_list)
 
         # ставим 3-х палубник
-        for i in range(3):
-        while i < 3:
-            print('Ставим трехпалубник (один)')
+        print(f'Ставим {self.ship_l}-палубник')
+        i = 0
+        while i < self.ship_l:
             cell_coord_list = list(input(f'Введите координаты ячейки {i+1}: ').split())
-            if sb_cls.bf_list[cell_coord_list[0]][cell_coord_list[1]] == 'О': # ячейка свободна
-                if i == 0:
-                    sb_cls.bf_list[cell_coord_list[0]][cell_coord_list[1]] = '■'
-                    self._ship_set[dic_key] = [0, 0]
-                    i += 1
-                elif i == 1:
-                    x3 = cell_coord_list[0]
-                    x4 = cell_coord_list[1]
-                    if x3 ==
-                    cell_coord_list[1]
-                else:
-                if i == 0:
-                    x1 = cell_coord_list[0]
-                    x2 = cell_coord_list[1]
-                    sb_cls.bf_list[cell_coord_list[0]][cell_coord_list[1]] = '■'
-                    i += 1
-                elif i == 1:
-                    x3 = cell_coord_list[0]
-                    x4 = cell_coord_list[1]
-                    if x3 ==
-                    cell_coord_list[1]
-                else:
-                    ...
-                if cell_coord_list[0] == 1 or cell_coord_list[0] == 6:
-                    ...
-            else: # сюда уже "ставили корабль"
-                ...
+            x = int(cell_coord_list[0]) - 1
+            y = int(cell_coord_list[1]) - 1
 
+            sb_err.x = x
+            sb_err.y = y
+            sb_err.i = i
+            if i == 0:
+                sb_err.first_x = x
+                sb_err.first_y = y
+                sb_err.ship_frize_list = self._ship_set
+
+            if sb_err.we_can_use_this_cell():
+                sb_cls.bf_list[x][y] = '■'
+
+                self._ship_set.append((x, y))
+                self._ship_set.append((x-1, y))
+                self._ship_set.append((x+1, y))
+                self._ship_set.append((x, y-1))
+                self._ship_set.append((x, y+1))
+                sb_err.ship_frize_list = self._ship_set
+
+                sb_cls.show()
+                i += 1
+            else:
+                print('Нельзя ставить корабли вплотную друг к другу')
 
 # user_data = [
 #     ['■', '■', '■', 'О', 'О', 'О'],
@@ -200,6 +271,16 @@ pick_hide = [
     ['О', 'О', 'О', 'О', '■', 'О'],
     ['О', 'О', 'О', '■', 'О', '■']
 ]
+pick_hide1 = [
+    ['О', '■', '■', '■', 'О', 'О'],
+    ['О', 'О', 'О', 'О', '■', 'О'],
+    ['■', '■', 'О', 'О', 'О', 'О'],
+    ['О', 'О', '■', '■', 'О', '■'],
+    ['О', 'О', 'О', 'О', 'О', 'О'],
+    ['■', 'О', 'О', '■', 'О', 'О']
+]
+# Использую как базу для ходов компа. Рандомно выбираем ключ. Использованное значение по ключу обнуляем и при
+# повторном попадании инкрементим ключ до следующего с ненулевым value
 _comp_pick = {
      1:[1, 1],  2:[1, 2],  3:[1, 3],  4:[1, 4],  5:[1, 5],  6:[1, 6],
      7:[2, 1],  8:[2, 2],  9:[2, 3], 10:[2, 4], 11:[2, 5], 12:[2, 6],
@@ -208,31 +289,26 @@ _comp_pick = {
     25:[5, 1], 26:[5, 2], 27:[5, 3], 28:[5, 4], 29:[5, 5], 30:[5, 6],
     31:[6, 1], 32:[6, 2], 33:[6, 3], 34:[6, 4], 35:[6, 5], 36:[6, 6]
 }
-_set_ship = {
-     1:[1, 1],  2:[1, 2],  3:[1, 3],  4:[1, 4],  5:[1, 5],  6:[1, 6],
-     7:[2, 1],  8:[2, 2],  9:[2, 3], 10:[2, 4], 11:[2, 5], 12:[2, 6],
-    13:[3, 1], 14:[3, 2], 15:[3, 3], 16:[3, 4], 17:[3, 5], 18:[3, 6],
-    19:[4, 1], 20:[4, 2], 21:[4, 3], 22:[4, 4], 23:[4, 5], 24:[4, 6],
-    25:[5, 1], 26:[5, 2], 27:[5, 3], 28:[5, 4], 29:[5, 5], 30:[5, 6],
-    31:[6, 1], 32:[6, 2], 33:[6, 3], 34:[6, 4], 35:[6, 5], 36:[6, 6]
-}
+# список кораблей, которые пользователь будет расставлять на поле
+_ship_nom = [3, 2, 2, 1, 1, 1, 1]
+
+# _ship_element_list = []
+_ship_frize_list = []
+
 try:
+    _set_ship = []
+
     sb_cls = SeaBattle(0, 0, True, user_data, pick_visual, pick_hide)
     sb_cls.show()
 
-    s_cls = Ship(0, 0, user_data, _set_ship)
+    s_cls = Ship(0, 0, user_data, [], 0)
 
     # Распологаем корабли на поле
     print('Поставьте корабли на поле: 1 корабль на 3 клетки, 2 корабля на 2 клетки, 4 корабля на одну клетку')
     print('Без диагональных и Г-образных')
-    for i in range(11):
-        cell_coord_list = list(input('Введите координаты ячейки: ').split())
-        sb_cls.x = int(cell_coord_list[0])-1 # -1 из-за смещения индексов элемента массива по отношению к системе координат нашего поля
-        sb_cls.y = int(cell_coord_list[1])-1 # -1 из-за смещения индексов элемента массива по отношению к системе координат нашего поля
-        s_cls.x = int(cell_coord_list[0])-1 # -1 из-за смещения индексов элемента массива по отношению к системе координат нашего поля
-        s_cls.y = int(cell_coord_list[1])-1 # -1 из-за смещения индексов элемента массива по отношению к системе координат нашего поля
+    for ship_size in range(len(_ship_nom)):
+        s_cls.ship_l = int(_ship_nom[ship_size])
         s_cls.set_ship()
-    sb_cls.show() # М/б стоит отрисовывать поле после ввода кажой точки ? Возможно это будет нагляднее
 
     # начинаем батл =)
     print('Начнем сражение!')
@@ -264,14 +340,15 @@ try:
         sb_cls.show()
         k += 1
 
-except ValueError:
+except ValueError: #LookupError:
     if sb_cls._ErrorId == 1:
         print('\nПо данной ячейке уже стреляли!!!')
     elif sb_cls._ErrorId == 2:
         print('\nОшибка выбора цели! Клетка за пределами поля!')
     else:
         print('\nКод отлова')
-        err = sys.excepthook
+        ValueError('Некорректные координаты')
+        IndexError('Некорректный индекс')
     # IndexError / TypeError
     # tb = sys.exception().__traceback__
     # raise OtherException(...).with_traceback(tb)
