@@ -86,11 +86,11 @@ class SeaBattle:
             self.pick_list[self.x][self.y] = value
 
     @property
-    def pick_cell_comp(self): # ход игрока - выстрел по ячейке
-        return 'X' #????????????????????????????????????????????????????
+    def pick_cell_comp(self): # ход компа - выстрел по ячейке
+        return 'X' #???
 
     @pick_cell_comp.setter
-    def pick_cell_comp(self, value): # ход игрока - выстрел по ячейке
+    def pick_cell_comp(self, value): # ход компа - выстрел по ячейке
         if self.bf_list[self.x][self.y] == value:
             raise ValueError("По данной ячейке уже стреляли (pc)")
         else:
@@ -113,9 +113,6 @@ class SeaBattle:
             print('Поздравляю! Вы победили!')
             return False
         return True
-
-class ErrorWorcker:
-    ...
 
 class CheckUseCell:
     def __init__(self, x, y, first_x, first_y, i, num):
@@ -156,9 +153,8 @@ class CheckUseCell:
         return True
 
     def we_can_use_this_cell(self):
-        if not (0 <= self.x < 6 and 0 <= self.y < 6):
-            print('Координаты вне поля! Повторите выбор!')
-            return False
+        if self.x < 0 or self.x > 5 or self.y < 0 or self.y > 5:
+            raise IndexError('Координаты вне поля!')
 
         if sb_cls.bf_list[self.x][self.y] != 'О':  # ячейка не свободна
             print('Ячейка уже занята. Выберите другую')
@@ -166,24 +162,23 @@ class CheckUseCell:
 
         self.error_check()
 
-        if self.i == 0 and self.num == 0:
+        if self.i == 0 and self.num == 0: # если это первый элемент корабля, который мы ставим на поле, рядом не должно частей быть других кораблей
             return True
-        elif self.i > 0 and self.num == 1:
+        elif self.i > 0 and self.num == 1: # если ставим второй+ элемент, рядом должен быть только один элемент корабля
             if (self.x == self.first_x or self.y == self.first_y):  # либо вертикаль, либо горизонталь
                 return True
             else:  # диогональ - ошибка
-                print('2. По диагонали размещать нельзя!')
+                print('По диагонали размещать нельзя!')
                 return False
         else:
             print('По соседству более одной части корабля или части далеко друг от друга!')
             return False
 
 class Ship: # класс размещения кораблей на поле
-    def __init__(self, x, y, bf_list, _ship_set, ship_l):
+    def __init__(self, x, y, bf_list, ship_l):
         self.x = x
         self.y = y
         self.bf_list = bf_list
-        self._ship_set = _ship_set
         self.ship_l = ship_l
 
     def set_ship(self): # расставим корабли
@@ -193,7 +188,7 @@ class Ship: # класс размещения кораблей на поле
         # ставим 3-х палубник
         print(f'Ставим {self.ship_l}-палубник')
         i = 0
-        while i < self.ship_l:
+        while i < self.ship_l: # перебираем кол-во палуб коробля - сколько ячеек нам нужно поставить на поле
             cell_coord_list = list(input(f'Введите координаты ячейки {i+1}: ').split())
             x = int(cell_coord_list[0]) - 1
             y = int(cell_coord_list[1]) - 1
@@ -201,12 +196,12 @@ class Ship: # класс размещения кораблей на поле
             sb_err.x = x
             sb_err.y = y
             sb_err.i = i
-            if i == 0:
+            if i == 0: # зафиксируем координаты первого элемента корабля (чтобы фиксировать установку по вертикали или горизонтали и исключить диагональную расстановку)
                 sb_err.first_x = x
                 sb_err.first_y = y
                 sb_err.num = 0
 
-            if sb_err.we_can_use_this_cell():
+            if sb_err.we_can_use_this_cell(): # если все проверки пройдены - можно ставить элемент корабля на поле
                 sb_cls.bf_list[x][y] = '■'
                 self.i = i
 
@@ -214,10 +209,14 @@ class Ship: # класс размещения кораблей на поле
                 i += 1
 
 print(
+    '*********************************************\n'
+    '           Игра «Морской бой»\n'
+    '*********************************************\n'
     'Вам дается два поля:\n'
     '   1. поле для расстановки своих кораблей\n'
-    '   2. поле по которому Вы будете наносить удары, пытаясь потопить корабли противника\n'
-    'В обоих случаях аккуратно вводите координаты (строка - пробел - столбец): 1 5\n'
+    '   2. поле по которому Вы будете наносить\n'
+    '      удары, пытаясь потопить корабли противника\n'
+    'В обоих случаях аккуратно вводите координаты (строка - пробел - столбец). Например: 1 5\n'
     'При расставновке своих кораблей учитывайте, что нельзя их располагать вплотную дуг к другу\n'
     'При нанесении ударов по полю компьютера, нельзя бить в одну и ту же точку - это завершит игру\n'
     'Удачи!'
@@ -295,9 +294,7 @@ _comp_pick = {
 _ship_nom = [3, 2, 2, 1, 1, 1, 1]
 
 try:
-    _set_ship = []
-
-    d_key = random.randint(1, 4) # выбор шаблона поля компа
+    d_key = random.randint(1, 4) # выбор ключа "поля компа"
     if d_key == 1:
         pick_hide = pick_hide1
     elif d_key == 2:
@@ -310,7 +307,7 @@ try:
     sb_cls = SeaBattle(0, 0, True, user_data, pick_visual, pick_hide)
     sb_cls.show()
 
-    s_cls = Ship(0, 0, user_data, [], 0)
+    s_cls = Ship(0, 0, user_data, 0)
 
     # Распологаем корабли на поле
     for ship_size in range(len(_ship_nom)):
@@ -321,26 +318,26 @@ try:
     print('Начнем сражение!')
     k = 0
     while sb_cls.check_win_user() and sb_cls.check_win_comp():
-        sb_cls.z = k % 2 == 0
+        sb_cls.z = (k % 2 == 0)
         if sb_cls.z: # определяем кто ходит (пользователю даем первый ход)
             print('Ход игрока!')
             cell_coord_list = list(input('Куда стреляем? Координаты: ').split())
         else:
-            dic_key = random.randint(1, 36)
-            if list(_comp_pick.get(dic_key)) == [0, 0]:
-                while list(_comp_pick.get(dic_key)) == [0, 0]:
+            dic_key = random.randint(1, 36) # рандомно получаем ключ к координатам по которым доллжен ударить компьютер
+            if list(_comp_pick.get(dic_key)) == [0, 0]: # если по ключу лежат нулевые координаты
+                while list(_comp_pick.get(dic_key)) == [0, 0]: # инкрементим ключ и ищем следующие не нулевые
                     if dic_key >= 36:
                         dic_key = 1
                     dic_key += 1
-            cell_coord_list = list(_comp_pick.get(dic_key))
-            _comp_pick[dic_key] = [0, 0]
+            cell_coord_list = list(_comp_pick.get(dic_key)) # опеределили координаты по которым будет бить комп
+            _comp_pick[dic_key] = [0, 0] # обнуляем использованные координаты
             print(f'Ход компьютера! Ячейка {cell_coord_list}')
 
         sb_cls.x = int(cell_coord_list[0]) - 1  # -1 из-за смещения индексов элемента массива
                                                 # по отношению к системе координат нашего поля
         sb_cls.y = int(cell_coord_list[1]) - 1  # -1 из-за смещения индексов элемента массива
                                                 # по отношению к системе координат нашего поля
-        if sb_cls.z: # определяем на каком поле играем
+        if sb_cls.z:
             sb_cls.pick_cell_user = sb_cls.pick_ship()
         else:
             sb_cls.pick_cell_comp = sb_cls.pick_ship()
@@ -348,17 +345,11 @@ try:
         k += 1
 
 except ValueError as error:
-    if sb_cls._ErrorId == 1:
-        print('\nПо данной ячейке уже стреляли!!!')
-    elif sb_cls._ErrorId == 2:
-        print('\nОшибка выбора цели! Клетка за пределами поля!')
-    else:
-        print(error)
+    print(error)
+except IndexError as error:
+    print(error)
 else:
-    # Придумать как сюда вывести сообщение о победе. А надо ли ?
-    # print('\nКод, который выполнится, если всё хорошо прошло в блоке try')
-    ...
+    print('Игра завершена!')
 finally:
-    # print('\nКод, который выполнится по любому')
-    ...
+    print('Спасибо, что выбрали нашу компанию!')
 
