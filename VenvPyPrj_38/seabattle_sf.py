@@ -265,7 +265,56 @@ class Game:
         # сначала длинные корабли, а потом короткие. Если было сделано много (несколько тысяч) попыток установить
         # корабль, но это не получилось, значит доска неудачная и на неё корабль уже не добавить. В таком случае
         # нужно начать генерировать новую доску
-        ...
+        _comp_random = copy(_comp_move)
+        for i in range(len(_ship_nom)):
+            cnt = 0
+            j = 0
+            while j < _ship_nom[i]:
+                if cnt == 10000:
+                    break
+                cnt += 1
+                if j == 0:
+                    random_start_cell = random.randint(1, 36)  # рандомно получаем координату X
+                    if list(_comp_move.get(random_start_cell)) == [0, 0]:  # если по ключу лежат нулевые координаты
+                        s_lst = 0
+                        while list(_comp_move.get(random_start_cell)) == [0, 0]:  # инкрементим ключ и ищем следующие не нулевые
+                            if s_lst == 40:
+                                break
+                            if random_start_cell >= 36:
+                                random_start_cell = 1
+                            random_start_cell += 1
+                            s_lst += 1
+                    cell_coord_list = list(_comp_move.get(random_start_cell))  # опеределили координаты
+                    _comp_move[random_start_cell] = [0, 0]  # обнуляем использованные координаты
+
+                    random_vertical = random.randint(0, 1) # рандомно определяем по вертикали или горизонтали ставим
+                    _cell_x = cell_coord_list[0]-1
+                    _cell_y = cell_coord_list[1]-1
+                else:
+                    if not random_vertical:
+                        if _cell_x == 0:
+                            while empty_board[_cell_x][_cell_y] == '■' and _cell_x <= 5:
+                                _cell_x = _cell_x + 1
+                        elif _cell_x == 5:
+                            while empty_board[_cell_x][_cell_y] == '■':
+                                _cell_x = _cell_x - 1
+                        else:
+                            _cell_x = _cell_x + 1
+                    else:
+                        if _cell_y == 0:
+                            _cell_y = _cell_y + 1
+                        elif _cell_y == 5:
+                            _cell_y = _cell_y - 1
+
+                if empty_board[_cell_x][_cell_y] == 'О':
+                    empty_board[_cell_x][_cell_y] = '■'
+                    j += 1
+
+            board = Board(empty_board, _ship_nom, False, 7, [], [])
+            board.contour()
+
+        for k in range(6):
+            print(k + 1, '| {} | {} | {} | {} | {} | {} |'.format(*empty_board[k]))
 
     def greet(self):  # метод, который в консоли приветствует пользователя и рассказывает о формате ввода
         print(
@@ -375,6 +424,7 @@ try:
 
     game = Game(player_user, user_board, ai_user, ai_board, _ship_nom, pick_hide)
     game.start()
+    # game.random_board()
 
 except ValueError as error:
     print(error)
