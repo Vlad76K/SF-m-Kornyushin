@@ -1124,8 +1124,8 @@ print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 # Задание 5.3.7
 # Замените знаки «?» корректным выражением
 # пусть a и b - переменные, которые мы хотим проверить
-# a = 2
-# b = 0
+# a = False
+# b = True
 # if a and b:
 #     print("Обе переменные истинные")
 #     print(a,b)
@@ -1639,7 +1639,7 @@ e_n = (1 + 1/n)**n
 #     step += 1 # счетчик делал для отладки
 
 
-# ЩЩП
+# ООП
 # Парадигмы программирования
 # В программировании выделяют несколько основных подходов, которые определяют стиль программирования — парадигмы
 # программирования (набор идей и понятий)
@@ -2032,14 +2032,112 @@ e_n = (1 + 1/n)**n
 
 # см. решение в seabattle.py
 
-_comp_pick = {
-     1:[1, 1],  2:[1, 2],  3:[1, 3],  4:[1, 4],  5:[1, 5],  6:[1, 6],
-     7:[2, 1],  8:[2, 2],  9:[2, 3], 10:[2, 4], 11:[2, 5], 12:[2, 6],
-    13:[3, 1], 14:[3, 2], 15:[3, 3], 16:[3, 4], 17:[3, 5], 18:[3, 6],
-    19:[4, 1], 20:[4, 2], 21:[4, 3], 22:[4, 4], 23:[4, 5], 24:[4, 6],
-    25:[5, 1], 26:[5, 2], 27:[5, 3], 28:[5, 4], 29:[5, 5], 30:[5, 6],
-    31:[6, 1], 32:[6, 2], 33:[6, 3], 34:[6, 4], 35:[6, 5], 36:[6, 6]
-}
+# _comp_pick = {
+#      1:[1, 1],  2:[1, 2],  3:[1, 3],  4:[1, 4],  5:[1, 5],  6:[1, 6],
+#      7:[2, 1],  8:[2, 2],  9:[2, 3], 10:[2, 4], 11:[2, 5], 12:[2, 6],
+#     13:[3, 1], 14:[3, 2], 15:[3, 3], 16:[3, 4], 17:[3, 5], 18:[3, 6],
+#     19:[4, 1], 20:[4, 2], 21:[4, 3], 22:[4, 4], 23:[4, 5], 24:[4, 6],
+#     25:[5, 1], 26:[5, 2], 27:[5, 3], 28:[5, 4], 29:[5, 5], 30:[5, 6],
+#     31:[6, 1], 32:[6, 2], 33:[6, 3], 34:[6, 4], 35:[6, 5], 36:[6, 6]
+# }
+#
+# # while i in range(6):
+# print(list(_comp_pick.get(15)))
+#
+# class Area:
+#     def __init__(self, side_x, side_y, radius):
+#         self.side_x = side_x
+#         self.side_y = side_y
+#         self.radius = radius
+#     def calc(self):
+#         return self.side_x * self.side_y
+#
+# class Rectangle(Area):
+#     def __init__(self, side_x, side_y):
+#         self.side_x = side_x
+#         self.side_y = side_y
+#
+#     def calc(self):
+#         return self.side_x * self.side_y
+#
+# class Square(Area):
+#     def __init__(self, side):
+#         self.side = side
+#
+#     def calc(self):
+#         return self.side * self.side
+#
+# class NonPositiveDigitException(ValueError):
+#     def __init__(self, message, error):
+#         super().__init__(message)  # вызов конструктора родительского класса
+#         print(f'Errors: {error}')  # печатаем ошибку
+#
+# try:
+#     square = Square(0)
+#     square.side = int(input('Введите длину стороны: '))
+#
+#     if square.side <= 0 or square.side <= 0:
+#         raise NonPositiveDigitException('message', 'Вы ввели сторону нулевой или отрицательной длины!')
+#     else:
+#         print(square.calc())
+# except:
+#     ...
+# else:
+#     print('Если код в try корректно завершился!')
+# finally:
+#     print('Спасибо, что выбрали нашу компанию! =)')
 
-# while i in range(6):
-print(list(_comp_pick.get(15)))
+# import os
+# help(os)
+# print(os.getcwd())   # получить текущую директорию
+# print(os.listdir())  # получить список файлов текущей директории
+
+
+# Если вы планируете, что модуль будут запускать как самостоятельный скрипт – используйте следующую инструкцию:
+# Здесь все вызовы функций и вывод информации на стандартный поток вывода
+# if __name__ == '__main__':
+#     pass
+
+# import math
+# print(math.trunc(math.fmod(math.fabs(-10000000), 55)+0.3))
+
+# import time
+#
+# named_tuple = time.localtime()  # получить struct_time
+# time_string1 = time.strftime("%H:%M:%S", named_tuple)  # только время
+# time_string2 = time.strftime("%M", named_tuple)        # только минуты
+# time_string3 = time.strftime("%d/%m/%Y", named_tuple)  # только дату
+# time_string4 = time.strftime("%m", named_tuple)        # только месяц
+#
+# print(time_string1)  # только время
+# print(time_string2)  # только минуты
+# print(time_string3)  # только дату
+# print(time_string4)  # только месяц
+
+# import time
+#
+# i = 10
+# while i != 0:
+#     print(i)
+#     time.sleep(1)
+#     i -= 1
+#     print('Время вышло!')
+
+# Задание 3.3.7
+# Вам нужно написать два модуля:
+# 1. Первый должен содержать число Пи в виде константы 3.14, и две функции, которые будут считать площадь круга и прямоугольника.
+# 2. Второй модуль должен импортировать первый, далее запрашивать у пользователя размеры круга и квадрата. В результате выводить, какая из фигур больше.
+# from math_my import square_circle, square_rectangle
+#
+# side1 = int(input('Введите размер стороны 1: '))
+# side2 = int(input('Введите размер стороны 2: '))
+# print(square_rectangle(side1, side2))
+#
+# radius = int(input('Введите радиус круга: '))
+# print(square_circle(radius))
+#
+# if square_circle(radius) > square_rectangle(side1, side2):
+#     print('Площадь круга больше')
+# else:
+#     print('Площадь прямоугольника больше')
+
