@@ -2141,3 +2141,68 @@ e_n = (1 + 1/n)**n
 # else:
 #     print('Площадь прямоугольника больше')
 
+# Путь к файлу
+# Путь (англ. path) — набор символов, показывающий расположение файла или каталога в файловой системе.
+#
+# В операционных системах UNIX разделительным знаком при записи пути является «/», в Windows — «\». Эти знаки служат
+# для разделения названия каталогов, составляющих путь к файлу. Все вы видели, например, такой путь
+# на ОС Windows: C:\Program Files. Это и есть путь до папки Program Files.
+#
+# Существует два типа пути:
+# 1. абсолютный (путь, который указывает на одно и то же место в файловой системе, вне зависимости от текущего
+#    рабочего каталога или других обстоятельств. Его ещё называют полным),
+# 2. относительный (это путь по отношению к текущему рабочему каталогу пользователя).
+# import os
+# start_path = os.getcwd()  # получить текущий путь
+# print(start_path)            # C:\Users\пк\PythonProjects\SkillFactory\VenvPyPrj_38
+# os.chdir("..")            # подняться на один уровень выше
+# print(os.getcwd())           # C:\Users\пк\PythonProjects\SkillFactory
+# os.chdir(start_path)      # вернёмся в ту директорию, из которой стартовали
+# print(os.getcwd())           # C:\Users\пк\PythonProjects\SkillFactory\VenvPyPrj_38
+
+# Задание 3.4.3
+# Сделайте функцию, которая принимает от пользователя путь и выводит всю информацию о содержимом этой папки.
+# Для реализации используйте функцию встроенного модуля os.walk(). Если путь не указан,
+# то сравнение начинается с текущей директории
+import os
+def path_walk(top):
+    if not top:
+        top = os.getcwd()
+    for dirpath, dirnames, filenames in os.walk(top, topdown=True, onerror=None, followlinks=False):
+        print(dirpath)
+        print('Влож.каталоги:')
+        for dir_nm in dirnames:
+            print(dir_nm)
+        print('Файлы:')
+        for file_nm in filenames:
+            print(file_nm)
+        print(' ============================== ')
+
+start_path = input('Введите путь: ')
+path_walk(start_path)
+# ответ из курса SF
+# import os
+# def walk_desc(path=None):
+#     start_path = path if path is not None else os.getcwd()
+#     for root, dirs, files in os.walk(start_path):
+#         print("Текущая директория", root)
+#         print("---")
+#         if dirs:
+#             print("Список папок", dirs)
+#         else:
+#             print("Папок нет")
+#         print("---")
+#         if files:
+#             print("Список файлов", files)
+#         else:
+#             print("Файлов нет")
+#         print("---")
+#         if files and dirs:
+#             print("Все пути:")
+#         for f in files:
+#             print("Файл ", os.path.join(root, f))
+#         for d in dirs:
+#             print("Папка ", os.path.join(root, d))
+#         print("===")
+# walk_desc()
+
