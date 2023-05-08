@@ -2164,22 +2164,23 @@ e_n = (1 + 1/n)**n
 # Сделайте функцию, которая принимает от пользователя путь и выводит всю информацию о содержимом этой папки.
 # Для реализации используйте функцию встроенного модуля os.walk(). Если путь не указан,
 # то сравнение начинается с текущей директории
-import os
-def path_walk(top):
-    if not top:
-        top = os.getcwd()
-    for dirpath, dirnames, filenames in os.walk(top, topdown=True, onerror=None, followlinks=False):
-        print(dirpath)
-        print('Влож.каталоги:')
-        for dir_nm in dirnames:
-            print(dir_nm)
-        print('Файлы:')
-        for file_nm in filenames:
-            print(file_nm)
-        print(' ============================== ')
+# import os
+# def path_walk(top):
+#     if not top:
+#         top = os.getcwd()
+#     for dirpath, dirnames, filenames in os.walk(top, topdown=True, onerror=None, followlinks=False):
+#         print(dirpath)
+#         print('Влож.каталоги:')
+#         for dir_nm in dirnames:
+#             print(dir_nm)
+#         print('Файлы:')
+#         for file_nm in filenames:
+#             print(file_nm)
+#         print(' ============================== ')
+#
+# start_path = input('Введите путь: ')
+# path_walk(start_path)
 
-start_path = input('Введите путь: ')
-path_walk(start_path)
 # ответ из курса SF
 # import os
 # def walk_desc(path=None):
@@ -2205,4 +2206,298 @@ path_walk(start_path)
 #             print("Папка ", os.path.join(root, d))
 #         print("===")
 # walk_desc()
+
+# Примеры практического применения функции os.walk().
+# В этом примере считается количество байтов, занятое файлами, не являющимися каталогами в каждом начальном
+# каталоге, за исключением того, что не будем просматривать каталог CVS ни в одном подкаталоге:
+# import os
+# from os.path import join, getsize
+#
+# for root, dirs, files in os.walk('python/Lib/email'):
+#     print(root, "consumes", end=" ")
+#     print(sum(getsize(join(root, name)) for name in files), end=" ")
+#     print("bytes in", len(files), "non-directory files")
+#     if 'CVS' in dirs:
+#         # не просматриваем каталог `CVS`
+#         dirs.remove('CVS')
+# В следующем примере простая реализация функции shutil.rmtree(). В функции os.walk() указан обход
+# дерева каталогов снизу вверх, это очень важно, т. к. функция os.rmdir() не позволяет удалить каталог, пока он не пуст:
+# ВНИМАНИЕ! В примере удаляется все из каталога, указанного в переменной top, при условии, что нет символических ссылок.
+# Это опасно! Например, если top == '/', это может удалить все файлы на диске.
+# import os
+# for root, dirs, files in os.walk(top, topdown=False):
+#     for name in files:
+#         os.remove(os.path.join(root, name))
+#     for name in dirs:
+#         os.rmdir(os.path.join(root, name))
+
+# Работа с файлами
+# Смотрим: C:\Users\пк\PythonProjects\SkillFactory\1111.txt
+# f = open('..\\1111.txt', 'a', encoding='utf8')
+# f.write('Новая строка\n')
+# f.close()
+# f = open('..\\1111.txt', 'r', encoding='utf8')
+# print(f.read(10))
+# print(f.read(10))
+# f.close()
+
+# Чтение и запись построчно
+# writelines — записывает список строк в файл;
+# readline — считывает из файла одну строку и возвращает её;
+# readlines — считывает из файла все строки в список и возвращает их
+# f = open('..\\1111.txt', 'a', encoding='utf8')  # открываем файл на дозапись
+# sequence = ["other string\n", "123\n", "test test\n"]
+# f.writelines(sequence)  # берёт строки из sequence и записывает в файл (без переносов)
+# f.close()
+# f = open('..\\1111.txt', 'r', encoding='utf8')
+# print(f.readlines())  # считывает все строки в список и возвращает список
+# f.close()
+# f = open('..\\1111.txt', 'r', encoding='utf8')
+# print(f.readline())  # This is a test string
+# print(f.read(4))  # This
+# print(f.readline())  # is a new string
+# f.close()
+#
+# # Файл как итератор
+# f = open('..\\1111.txt', 'r', encoding='utf8')
+# for line in f:
+#     print(line.strip())
+# f.close()
+#
+# with open('..\\1111.txt', 'r', encoding='utf8') as f:  # автоматическое закрытие файла
+#     a = f.read(10)
+#     b = f.read(30)
+# print(a)
+# print(b)
+
+# Задание 3.4.4
+# Создайте любой файл на операционной системе под название input.txt и построчно перепишите его в файл output.txt
+# r — открыть на чтение (по умолчанию);
+# w — перезаписать и открыть на запись (если файла нет, то он создастся);
+# x — создать и открыть на запись (если уже есть — исключение);
+# a — открыть на дозапись (указатель будет поставлен в конец);
+# t — открыть в текстовом виде (по умолчанию);
+# b — открыть в бинарном виде.
+# f_in = open('..\\input.txt', 'r', encoding='utf8')
+# f_out = open('..\\output.txt', 'x', encoding='utf8')
+# for line in f_in:
+#     f_out.write(line)
+# f_in.close()
+# f_out.close()
+#
+# with open('input.txt', 'r') as input_file:
+#    with open('output.txt', 'w') as output_file:
+#        for line in input_file:
+#            output_file.write(line)
+
+# Задание 3.4.5
+# Дан файл numbers.txt, компоненты которого являются действительными числами (файл создайте самостоятельно и заполните
+# любыми числами, в одной строке одно число). Найдите сумму наибольшего и наименьшего из значений и
+# запишите результат в файл output.txt
+# with open('..\\numbers.txt', 'r') as input_file:
+#    with open('..\\output.txt', 'w') as output_file:
+#        min_num = max_num = float(input_file.readline())  # считали первое число
+#        for line in input_file:
+#            if float(line) < min_num:
+#                min_num = float(line)
+#            if float(line) > max_num:
+#                max_num = float(line)
+#        sum_out = min_num + max_num
+#        output_file.write(str(sum_out))
+#        output_file.write('\n')
+#        output_file.write(str(min_num))
+#        output_file.write('\n')
+#        output_file.write(str(max_num))
+#        output_file.write('\n')
+
+# Задание 3.4.6
+# В текстовый файл построчно записаны фамилии и имена учащихся класса и их оценки за контрольную.
+# Выведите на экран всех учащихся, чья оценка меньше 3 баллов. Cодержание файла:
+# Иванов О. 4
+# Петров И. 3
+# Дмитриев Н. 2
+# Смирнова О. 4
+# Керченских В. 5
+# Котов Д. 2
+# Бирюкова Н. 1
+# Данилов П. 3
+# Аранских В. 5
+# Лемонов Ю. 2
+# Олегова К. 4
+# with open('..\\input.txt', 'r', encoding='utf8') as input_file:
+#     for line in input_file:
+#         line_lst = line.strip().split('.')
+#         if int(line_lst[1]) < 3:
+#             # print(line.strip())
+#             print(*line.strip().split()[:-1])
+#
+# with open('..\\input.txt', encoding="utf8") as file:
+#     for line in file:
+#         points = int(line.split()[-1])
+#         if points < 3:
+#             name = " ".join(line.split()[:-1])
+#             print(name)
+
+# Задание 3.4.7
+# Выполните реверсирование строк файла (перестановка строк файла в обратном порядке)
+# with open('..\\input.txt', 'r', encoding='utf8') as f:
+# 	f.seek(0, 2)
+# 	fsize = f.tell()
+# 	f.seek(max(fsize - 1024, 0), 0)
+# 	lines = f.readlines()
+#
+# start = 0
+# for x in lines[::-1]:
+# 	if x.startswith('\n'):
+# 		start = lines.index(x)
+# 		break
+# print(lines[start + 1:])
+
+# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+# with open('input.txt', 'r') as input_file:
+#     with open('output.txt', 'w') as output_file:
+#         for line in reversed(input_file.readlines()):
+#             output_file.write(line)
+# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+# import io, os
+# class ReverseFile(io.IOBase):
+#     def __init__ (self, filename, headers=1):
+#         self.fp = open(filename, 'r', encoding='utf8')
+#         self.headers = headers
+#         self.reverse = self.reversed_lines()
+#         self.end_position = -1
+#         self.current_position = -1
+#
+#     def readline(self, size=-1):
+#         if self.headers > 0:
+#             self.headers -= 1
+#             raw = self.fp.readline(size)
+#             self.end_position = self.fp.tell()
+#             return raw
+#
+#         raw = next(self.reverse)
+#         if self.current_position > self.end_position:
+#             return raw
+#
+#         raise StopIteration
+#
+#     def reversed_lines(self):
+#         # Generate the lines of file in reverse order.
+#         part = ''
+#         for block in self.reversed_blocks():
+#             block = block + part
+#             block = block.split('\n')
+#             block.reverse()
+#             part = block.pop()
+#             if block[0] == '':
+#                 block.pop(0)
+#
+#             for line in block:
+#                 yield line + '\n'
+#
+#         if part:
+#             yield part
+#
+#     def reversed_blocks(self, blocksize=0xFFFF):
+#         # "Generate blocks of file's contents in reverse order."
+#         file = self.fp
+#         file.seek(0, os.SEEK_END)
+#         here = file.tell()
+#         while 0 < here:
+#             delta = min(blocksize, here)
+#             here -= delta
+#             file.seek(here, os.SEEK_SET)
+#             self.current_position = file.tell()
+#             yield file.read(delta)
+#
+# rev = ReverseFile("..\\input.txt")
+# print(rev.reversed_lines)
+# for line in rev.reversed_lines():
+#     print(f'{line.strip()}')
+
+# Контекстный менеджер — определенная структура в языке Python (класс или генератор), основывающаяся на главном
+# принципе: при его открытии и закрытии срабатывает заранее написанный программистом код
+# with open("file.bin", "wt") as f: # открываем файл с помощью with
+#     f.write("abcdefg")
+# Чтобы написать контекстный менеджер нужно всего лишь помнить о нескольких вещах:
+# - Нужно создать класс и написать в нём метод __enter__. Код в этом методе будет выполняться при входе в контекстный
+#   менеджер (при создании объекта с ключевым словом with).
+# - Написать метод __exit__. Этот метод будет выполнять код, помещённый в него, на выходе.
+# - Добавить в этот метод три дополнительных аргумента помимо self — exc_type, exc_val, exc_tb.
+# exc_type — это тип исключения, из-за которого вылетел контекстный менеджер. Если всё прошло успешно, то значение этого аргумента будет None.
+# exc_val — сообщение в исключении. Аналогично: если всё прошло успешно, этот аргумент будет None.
+# exc_tb — объект сообщения от интерпретатора. Лучше его вообще не трогать, если вы не разработчик языка, но, тем не менее, он всегда ждёт вас здесь. Возможно, когда-то, после нашего курса вы…
+# Пример контекстного менеджера:
+# from datetime import datetime
+# import time  # проверять действие измерителя будем с помощью библиотеки time
+# # вся суть этого измерителя заключается в том, что мы считаем разницу в секундах между открытием и
+#   закрытием контекстного менеджера
+# class Timer:
+#     def __init__(self):
+#         pass
+#     def __enter__(self):  # этот метод вызывается при запуске с помощью with. Если вы хотите вернуть какой-то объект,
+#                           # чтобы потом работать с ним в контекстном менеджере, как в примере с файлом, то просто
+#                           # верните этот объект через return
+#         self.start = datetime.utcnow()
+#         return None
+#     def __exit__(self, exc_type, exc_val, exc_tb):  # этот метод срабатывает при выходе из контекстного менеджера
+#         print(f"Time passed: {(datetime.utcnow() - self.start).total_seconds()}")
+# with Timer():
+#     time.sleep(2)  # засыпаем на 2 секунды
+# В консоль должно вывестись примерно следующее: Time passed: 2.00099
+
+# Вариант того же КМ через генератор:
+# from datetime import datetime
+# import time
+# from contextlib import contextmanager  # импортируем нужный нам декоратор
+#
+# @contextmanager  # оборачиваем функцию в декоратор contextmanager
+# def timer():
+#     start = datetime.utcnow()
+#     yield  # если вам нужно что-то вернуть через контекстный менеджер, просто вставьте этот объект сюда.
+#     print(f"Time passed: {(datetime.utcnow() - start).total_seconds()}")
+#
+#
+# with timer():
+#     time.sleep(2)
+
+# Задание 3.5.6
+# Напишите контекстный менеджер, который умеет безопасно работать с файлами.
+# В конструктор объекта контекстного менеджера передаются два аргумента: первый — путь к файлу, который надо открыть,
+# второй — тип открываемого файла (для записи, для чтения и т. д.).
+# При входе в контекстный менеджер должен открываться файл, и возвращаться объект для работы с этим файлом.
+# При выходе из контекстного менеджера файл должен закрываться. (Эталоном работы можно считать контекстный менеджер open)
+# from contextlib import contextmanager  # импортируем нужный нам декоратор
+# @contextmanager  # оборачиваем функцию в декоратор contextmanager
+# def file_reader(file_name, open_type):
+#     obj = open(file_name, open_type, encoding='utf8')
+#     yield obj # если вам нужно что-то вернуть через контекстный менеджер, просто вставьте этот объект сюда.
+#     obj.close()
+#     print("Работа завершена!")
+#
+# with file_reader('..\\input.txt', 'r') as obj_with:
+#     for line in obj_with:
+#         print(line.strip())
+
+# или через класс:
+# class FileReader:
+#     def __init__(self, file_name, open_type):
+#         self.file_name = file_name
+#         self.open_type = open_type
+#         self.obj = open(self.file_name, self.open_type, encoding='utf8')
+#
+#     def __enter__(self):
+#         return self.obj
+#
+#     def __exit__(self, exc_type, exc_val, exc_tb):
+#         self.obj.close()
+#
+# with FileReader('..\\input.txt', 'r') as obj_with:
+#     for line in obj_with:
+#         print(line.strip())
+#
+# Задание 3.5.7
+# Обсудите с коллегами в канале модуля в Slack преимущества использования контекстного менеджера. С какими
+# концепциями программирования он хорошо сочетается?
+
 
