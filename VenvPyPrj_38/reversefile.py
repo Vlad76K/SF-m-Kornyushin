@@ -1,7 +1,10 @@
-import os, io
+# Задание 3.4.7
+# Выполните реверсирование строк файла (перестановка строк файла в обратном порядке)
+import io, os
+
 class ReverseFile(io.IOBase):
     def __init__ (self, filename, headers=1):
-        self.fp = open(filename)
+        self.fp = open(filename, 'r', encoding='utf8')
         self.headers = headers
         self.reverse = self.reversed_lines()
         self.end_position = -1
@@ -21,8 +24,7 @@ class ReverseFile(io.IOBase):
         raise StopIteration
 
     def reversed_lines(self):
-        """Generate the lines of file in reverse order.
-        """
+        # Generate the lines of file in reverse order.
         part = ''
         for block in self.reversed_blocks():
             block = block + part
@@ -39,7 +41,7 @@ class ReverseFile(io.IOBase):
             yield part
 
     def reversed_blocks(self, blocksize=0xFFFF):
-        "Generate blocks of file's contents in reverse order."
+        # "Generate blocks of file's contents in reverse order."
         file = self.fp
         file.seek(0, os.SEEK_END)
         here = file.tell()
@@ -50,3 +52,7 @@ class ReverseFile(io.IOBase):
             self.current_position = file.tell()
             yield file.read(delta)
 
+rev = ReverseFile("..\\input.txt")
+print(rev.reversed_lines)
+for line in rev.reversed_lines():
+    print(f'{line.strip()}')
