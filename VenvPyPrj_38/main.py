@@ -3369,30 +3369,317 @@ node_9 = node_5.right_child.insert_right(4)
 # Задание 4.8.7
 # Модифицируйте алгоритм быстрой сортировки таким образом, чтобы ведущий элемент выбирался как случайный среди
 # подмассива, который сортируется на данном этапе. Воспользуйтесь функцией из пакета random
-import random
+# import random
+#
+# array = [2, 3, 1, 4, 6, 5, 9, 8, 7, 15]
+# def qsort(array, left, right):
+#     middle = random.choice(array[left: right + 1])
+#     # middle = (left + right) // 2
+#
+#     p = array[middle]
+#     i, j = left, right
+#     while i <= j:
+#         while array[i] < p:
+#             i += 1
+#         while array[j] > p:
+#             j -= 1
+#         if i <= j:
+#             array[i], array[j] = array[j], array[i]
+#             i += 1
+#             j -= 1
+#
+#     if j > left:
+#         qsort(array, left, j)
+#     if right > i:
+#         qsort(array, i, right)
+#
+# qsort(array, 0, len(array)-1)
+# print(array)
 
-array = [2, 3, 1, 4, 6, 5, 9, 8, 7, 15]
-def qsort(array, left, right):
-    middle = random.choice(array[left: right + 1])
-    # middle = (left + right) // 2
+# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!Итоговое задание !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Чат-бот конвертации валют !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+# import requests
+# r = requests.get(
+#     'https://baconipsum.com/api/?type=all-meat&paras=3&start-with-lorem=1&format=html')  # делаем запрос на сервер по переданному адресу
+# print(r.content)
+# b'<p>Bacon ipsum dolor amet leberkas pancetta t-bone buffalo porchetta pig.  Brisket burgdoggen shoulder flank corned
+# beef hamburger t-bone pork landjaeger tenderloin filet mignon ham hock beef ribs.  Turkey burgdoggen meatloaf,
+# buffalo beef swine meatball ribeye chuck chicken leberkas.  Jerky landjaeger short ribs meatball turducken,
+# burgdoggen biltong.  Pork tongue ground round capicola meatball.</p>\n<p>Landjaeger tongue venison, bresaola
+# t-bone shankle turkey.  Spare ribs tenderloin biltong jowl.  Short loin jowl picanha chicken strip steak pancetta
+# chuck sirloin.  Brisket spare ribs short loin t-bone.  Meatball swine pastrami, t-bone landjaeger doner bacon salami
+# sausage jerky.  Prosciutto fatback ball tip chislic turkey.</p>\n<p>Turkey drumstick cupim short ribs chislic.
+# Buffalo venison tri-tip bresaola meatloaf tenderloin chuck.  Pancetta kielbasa andouille boudin spare ribs chislic
+# buffalo capicola shankle corned beef meatball ground round jerky brisket.  Picanha andouille ball tip pork chop,
+# capicola ground round biltong t-bone sausage short loin.</p>\n'
 
-    p = array[middle]
-    i, j = left, right
-    while i <= j:
-        while array[i] < p:
-            i += 1
-        while array[j] > p:
-            j -= 1
-        if i <= j:
-            array[i], array[j] = array[j], array[i]
-            i += 1
-            j -= 1
+# import requests
+# r = requests.get('https://baconipsum.com/api/?type=all-meat&paras=3&start-with-lorem=1&format=html')
+# print(r.status_code)  # узнаем статус полученного ответа
+# 200
 
-    if j > left:
-        qsort(array, left, j)
-    if right > i:
-        qsort(array, i, right)
+# Есть несколько категорий ответов, например:
+#     200, 201, 202 и т. д. — ответы, которые говорят, что с запросом всё хорошо и ответ приходит правильный, т. е.
+#                             его можно обрабатывать и как-либо взаимодействовать с ним. На самом деле почти все
+#                             серверы всегда в ответ шлют именно ответ 200, а не какой-либо другой из этой же категории.
+#     300, 301 и т. д. — ответы, которые говорят, что вы будете перенаправлены на другой ресурс (необязательно на этом
+#                        же сервере).
+#     400, 401 и т. д. — ответы, которые говорят, что что-то неправильно с запросом. Запрашивается либо несуществующая
+#                        страница (всем известная 404 ошибка), либо же недостаточно прав для просмотра
+#                        страницы (403) и т. д.
+#     501, 502 и т. д. — ответы, которые говорят, что с запросом всё хорошо, но вот на сервере что-то сломалось,
+#                        и поэтому нормальный ответ прийти не может.
+# Со всеми типами ответов можно ознакомиться здесь: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
 
-qsort(array, 0, 8)
-print(array)
+# import requests
+# r = requests.get('https://baconipsum.com/api/?type=meat-and-filler')  # попробуем поймать json-ответ
+# print(r.content)
+# # b'["In est in, flank meatball non rump veniam turducken picanha voluptate adipisicing cillum corned beef.  Beef reprehenderit pork chop tenderloin, t-bone lorem consequat shank.  Ut velit elit deserunt enim ut, kevin ullamco irure ham hock quis corned beef consequat.  Meatball mollit ipsum buffalo labore beef dolore.  Short ribs voluptate in irure.  Pork loin in excepteur ipsum meatloaf, shank pariatur qui quis sausage dolor.  Commodo shoulder spare ribs occaecat, non cupidatat cillum eiusmod turducken pork dolore.","Bresaola veniam ex nostrud sunt exercitation short ribs est ut sed ea.  Magna eiusmod chislic id tail in velit, voluptate in.  Corned beef brisket sirloin, tail picanha fugiat minim pariatur eu.  Drumstick incididunt sed, reprehenderit officia doner short loin ut capicola tail tongue fugiat shank.  Culpa ut buffalo pork belly ribeye.  Ut cupim sunt, reprehenderit ea anim velit strip steak aliqua bresaola sausage.  Pancetta burgdoggen id landjaeger laborum commodo.","Aliqua nulla do esse voluptate drumstick shoulder ullamco excepteur porchetta cow mollit eiusmod kevin aliquip.  Meatloaf andouille boudin exercitation incididunt aliquip pastrami proident nisi pariatur.  Bresaola meatball elit incididunt, consectetur turducken rump chuck beef ribs jowl excepteur.  Cupidatat ut velit dolor beef ground round.  Ut dolore tempor ad sed.  Et kielbasa consectetur jowl ex rump aliquip picanha sed reprehenderit sirloin short ribs meatball.","Sunt pork loin corned beef ea, chicken mollit ipsum andouille ribeye eiusmod in rump commodo turducken do.  Id alcatra picanha short loin, sunt dolore short ribs laborum venison cupim fatback kevin est tri-tip.  Non commodo pastrami kielbasa est.  Ham hock quis pig porchetta, filet mignon minim mollit jowl ea cupidatat short ribs.  Short ribs pork chop elit kielbasa excepteur jowl doner mollit minim nostrud ham hamburger.  Ipsum pancetta shoulder, turducken sint meatloaf id kielbasa elit mollit consequat.","Cillum tri-tip ground round pastrami sirloin tongue beef ribs ut esse laborum doner officia cupim.  Jerky laborum mollit sirloin et consectetur cow meatball pig tail dolor officia anim.  Corned beef flank ipsum short loin.  Ut frankfurter hamburger strip steak mollit chuck."]'
+
+# import requests
+# import json  # импортируем необходимую библиотеку
+# r = requests.get('https://baconipsum.com/api/?type=meat-and-filler')
+# texts = json.loads(r.content)  # делаем из полученных байтов Python-объект для удобной работы
+# print(type(texts))  # проверяем тип сконвертированных данных
+# for text in texts:  # выводим полученный текст. Но для того чтобы он влез в консоль, оставим только первые 50 символов.
+#     print(text[:50], '\n')
+
+# import requests
+# import json
+# r = requests.get('https://api.github.com')
+# print(r.content)
+# # b'{\n  "current_user_url": "https://api.github.com/user",\n  "current_user_authorizations_html_url": "https://github.com/settings/connections/applications{/client_id}",\n  "authorizations_url": "https://api.github.com/authorizations",\n  "code_search_url": "https://api.github.com/search/code?q={query}{&page,per_page,sort,order}",\n  "commit_search_url": "https://api.github.com/search/commits?q={query}{&page,per_page,sort,order}",\n  "emails_url": "https://api.github.com/user/emails",\n  "emojis_url": "https://api.github.com/emojis",\n  "events_url": "https://api.github.com/events",\n  "feeds_url": "https://api.github.com/feeds",\n  "followers_url": "https://api.github.com/user/followers",\n  "following_url": "https://api.github.com/user/following{/target}",\n  "gists_url": "https://api.github.com/gists{/gist_id}",\n  "hub_url": "https://api.github.com/hub",\n  "issue_search_url": "https://api.github.com/search/issues?q={query}{&page,per_page,sort,order}",\n  "issues_url": "https://api.github.com/issues",\n  "keys_url": "https://api.github.com/user/keys",\n  "label_search_url": "https://api.github.com/search/labels?q={query}&repository_id={repository_id}{&page,per_page}",\n  "notifications_url": "https://api.github.com/notifications",\n  "organization_url": "https://api.github.com/orgs/{org}",\n  "organization_repositories_url": "https://api.github.com/orgs/{org}/repos{?type,page,per_page,sort}",\n  "organization_teams_url": "https://api.github.com/orgs/{org}/teams",\n  "public_gists_url": "https://api.github.com/gists/public",\n  "rate_limit_url": "https://api.github.com/rate_limit",\n  "repository_url": "https://api.github.com/repos/{owner}/{repo}",\n  "repository_search_url": "https://api.github.com/search/repositories?q={query}{&page,per_page,sort,order}",\n  "current_user_repositories_url": "https://api.github.com/user/repos{?type,page,per_page,sort}",\n  "starred_url": "https://api.github.com/user/starred{/owner}{/repo}",\n  "starred_gists_url": "https://api.github.com/gists/starred",\n  "topic_search_url": "https://api.github.com/search/topics?q={query}{&page,per_page}",\n  "user_url": "https://api.github.com/users/{user}",\n  "user_organizations_url": "https://api.github.com/user/orgs",\n  "user_repositories_url": "https://api.github.com/users/{user}/repos{?type,page,per_page,sort}",\n  "user_search_url": "https://api.github.com/search/users?q={query}{&page,per_page,sort,order}"\n}\n'
+
+# import requests
+# import json
+# r = requests.get('https://api.github.com')
+# d = json.loads(r.content)  # делаем из полученных байтов Python-объект для удобной работы
+# print(type(d))
+# print(d['following_url'])  # обращаемся к полученному объекту как к словарю и попробуем напечатать одно из его значений
+# # <class 'dict'>
+# # https://api.github.com/user/following{/target}
+
+# import requests
+# r = requests.post('https://httpbin.org/post', data={'key': 'value'})  # отправляем POST-запрос
+# print(r.content)  # содержимое ответа и его обработка происходит так же, как и с GET-запросами, разницы никакой нет
+# # b'<html>\r\n<head><title>504 Gateway Time-out</title></head>\r\n<body>\r\n<center><h1>504 Gateway Time-out</h1></center>\r\n</body>\r\n</html>\r\n'
+
+# import requests
+# import json
+# data = {'key': 'value'}
+# r = requests.post('https://httpbin.org/post', json=json.dumps(
+#     data))  # отправляем POST-запрос, но только в этот раз тип передаваемых данных будет JSON
+# print(r.content)
+# # b'{\n  "args": {}, \n  "data": "\\"{\\\\\\"key\\\\\\": \\\\\\"value\\\\\\"}\\"", \n  "files": {}, \n  "form": {}, \n  "headers": {\n    "Accept": "*/*", \n    "Accept-Encoding": "gzip, deflate", \n    "Content-Length": "22", \n    "Content-Type": "application/json", \n    "Host": "httpbin.org", \n    "User-Agent": "python-requests/2.30.0", \n    "X-Amzn-Trace-Id": "Root=1-6464d583-7a24b9354742eea11d5f3c06"\n  }, \n  "json": "{\\"key\\": \\"value\\"}", \n  "origin": "185.32.134.31", \n  "url": "https://httpbin.org/post"\n}\n'
+
+# Задание 5.2.3
+# Напишите программу, которая отправляет запрос на генерацию случайных текстов (используйте этот сервис:
+# https://baconipsum.com/api/?type=all-meat&paras=3&start-with-lorem=1&format=html).
+# Выведите первый из сгенерированных текстов
+# import requests
+# # делаем запрос на сервер по переданному адресу
+# r = requests.get('https://baconipsum.com/api/?type=all-meat&paras=3&start-with-lorem=1&format=html')
+# print(r.content)
+
+# import requests
+# import json  # импортируем необходимую библиотеку
+# r = requests.get('https://baconipsum.com/api/?type=meat-and-filler')
+# texts = json.loads(r.content)  # делаем из полученных байтов Python-объект для удобной работы
+# print(texts[0])
+# Kevin picanha rump ipsum andouille tri-tip meatloaf ut beef ribs strip steak esse pariatur chicken.  Nulla corned
+# beef ut, occaecat eu in shoulder sausage andouille labore.  Irure fatback corned beef ea.  Meatball meatloaf
+# laboris brisket, velit in filet mignon cow veniam.  Porchetta pork nulla, short loin spare ribs ut tenderloin
+# sunt alcatra voluptate ad incididunt.
+
+# Что такое боты Telegram?
+# Боты — это сторонние приложения, которые запускаются внутри Telegram
+# Приведём краткий список того, что умеют делать боты:
+#
+# Получение индивидуальных уведомлений и новостей. Бот может работать как умная газета, которая будет отправлять
+# интересующий вас контент, как только он будет опубликован.
+# Интеграция с другими сервисам. Бот может дополнять чаты Telegram возможностями из внешних сервисов, например:
+# Gmail Bot, GIF bot, IMDB bot, Wiki bot, Music bot, Youtube bot, GitHub bot.
+# Создание собственных инструментов. Бот может предоставлять вам оповещения о различных действиях, прогнозы погоды,
+# переводы, форматирование или другие услуги. Например: Markdown bot, Sticker bot, Vote bot, Like bot.
+
+# Как работают боты?
+# По сути, боты Telegram — это особые учётные записи, для которых не требуется дополнительный номер телефона.
+# Пользователи могут взаимодействовать с ботами двумя способами:
+#     1. Отправлять сообщения и команды ботам, открывая с ними чат или добавляя их в группы.
+#     2. Отправлять запросы прямо из поля ввода, вводя @username бота и запрос. Это позволяет отправлять контент от
+#        встроенных ботов прямо в любой чат, группу или канал
+
+# Для того чтобы создать бота, есть … бот. :) Вам необходимо написать @BotFather и выполнить несколько простых шагов.
+# Используйте команду /newbot, чтобы создать нового бота.
+#
+# Затем необходимо:
+#     1. Установить имя (name) вашего бота.
+#        Имя вашего бота отображается в контактной информации и в других местах.
+#     2. Установить имя пользователя (username) вашего бота.
+#        Имя пользователя — это короткое имя, которое будет использоваться для идентификации вашего бота и
+#        обращения к нему. Имена пользователей состоят из 5–32 символов и нечувствительны к регистру, могут включать
+#        только латинские символы, числа и символы подчёркивания. Имя пользователя вашего бота должно заканчиваться
+#        на «bot», например, «tetris_bot» или «TetrisBot».
+#     3. Получить токен (token).
+#        Токен представляет собой строку вида 110201543:AAHdqTcvCH1vGWJxfSeofSAs0K5PALDsaw. Он необходим для
+#        авторизации (подтверждения, что именно вы владелец этого бота, чтобы в программе было понятно, к какому
+#        именно боту привязываются все обработчики) вашей программы, в которой реализована логика бота. Токен — это
+#        пароль от вашего бота, поэтому храните свой токен в безопасности.
+#        С более подробной информацией о возможностях @BotFather можно ознакомиться в официальной документации.
+
+# @BotFather --> /newbot
+# I can help you create and manage Telegram bots. If you're new to the Bot API, please see the manual (https://core.telegram.org/bots).
+#
+# You can control me by sending these commands:
+#
+# /newbot - create a new bot
+# /mybots - edit your bots
+#
+# Edit Bots
+# /setname - change a bot's name
+# /setdescription - change bot description
+# /setabouttext - change bot about info
+# /setuserpic - change bot profile photo
+# /setcommands - change the list of commands
+# /deletebot - delete a bot
+#
+# Bot Settings
+# /token - generate authorization token
+# /revoke - revoke bot access token
+# /setinline - toggle inline mode (https://core.telegram.org/bots/inline)
+# /setinlinegeo - toggle inline location requests (https://core.telegram.org/bots/inline#location-based-results)
+# /setinlinefeedback - change inline feedback (https://core.telegram.org/bots/inline#collecting-feedback) settings
+# /setjoingroups - can your bot be added to groups?
+# /setprivacy - toggle privacy mode (https://core.telegram.org/bots/features#privacy-mode) in groups
+#
+# Web Apps
+# /myapps - edit your web apps (https://core.telegram.org/bots/webapps)
+# /newapp - create a new web app (https://core.telegram.org/bots/webapps)
+# /listapps - get a list of your web apps
+# /editapp - edit a web app
+# /deleteapp - delete an existing web app
+#
+# Games
+# /mygames - edit your games (https://core.telegram.org/bots/games)
+# /newgame - create a new game (https://core.telegram.org/bots/games)
+# /listgames - get a list of your games
+# /editgame - edit a game
+# /deletegame - delete an existing game
+
+# Имя (name) бота: Vlad28SF
+# Имя пользователя (username) вашего бота: Vlad28SFBot
+# Токен (token):
+
+# filters — фильтры, определяющие, следует ли вызывать декорированную функцию для соответствующего сообщения или нет.
+# У одного обработчика может быть несколько фильтров.
+# Мы с вами разберём два основных фильтра:
+#    - тип контента;
+#    - команды.
+
+# content_types  -  Список строк, по умолчанию ['text']
+# Если тип контента, содержащегося в сообщении, совпадает с типом указанным в качестве аргумента. То есть обработчик
+# по умолчанию реагирует на все текстовые сообщения.
+# commands       -  Список строк
+# Если сообщение начинается с команды, указанной в списке.
+
+# import telebot
+# import config
+#
+# TOKEN = "5957782602:AAEq8reL8N957GbRfGsqYgv-Kk6p5Ys1UC0"
+#
+# bot = telebot.TeleBot(TOKEN)
+#
+# # Обрабатываются все сообщения, содержащие команду '/start'.
+# @bot.message_handler(commands=['start',])
+# def handle_start(message):
+#     bot.send_message(message.chat.id, f'{message.from_user.first_name}, привет')  # message.chat.username -
+#
+# # Обрабатываются все сообщения, содержащие команду '/help'.
+# @bot.message_handler(commands=['help',])
+# def handle_help(message):
+#     pass
+#
+# # Обрабатывается все документы и аудиозаписи
+# @bot.message_handler(content_types=['document', 'audio'])
+# def handle_docs_audio(message):
+#     pass
+#
+# @bot.message_handler(commands=['text',])
+# def handle_text(message):
+#     pass
+#
+# @bot.message_handler(content_types=['photo',])
+# def handle_photo(message: telebot.types.Message):
+#     bot.reply_to(message, 'Nice meme XDD')
+#
+# bot.polling(none_stop=True)
+
+
+# Задание 5.3.2
+# Напишите обработчик, который на сообщения с фотографией будет отвечать сообщением «Nice meme XDD».
+# Бот должен отвечать не отдельным сообщением, а с привязкой к картинке
+# @bot.message_handler(content_types=['photo',])
+# def handle_photo(message: telebot.types.Message):
+#     bot.reply_to(message, 'Nice meme XDD')
+
+
+# Задание 5.4.4
+# Напишите программу, которая будет с помощью парсера lxml доставать текст из тега tag2 следующего HTML:
+# <html>
+#  <head> <title> Some title </title> </head>
+#  <body>
+#   <tag1> some text
+#      <tag2> MY TEXT </tag2>
+#    </tag1>
+#  </body>
+# </html>
+
+
+# import requests  # импортируем наш знакомый модуль
+# import lxml.html
+# from lxml import etree
+#
+# html = requests.get('https://ya.ru/').content  # получим html главной странички сайта с курсами
+#
+# tree = etree.parse('F:\Work\Vlad\Python\Задание5_4_4\Задание544.html', lxml.html.HTMLParser())
+# # попытаемся спарсить наш файл с помощью html-парсера
+#
+# ul = tree.findall('/body/tag1')
+#
+# # создаём цикл, в котором мы будем выводить название каждого элемента из списка
+# for tag2 in ul:
+#     a = tag2.find('tag2')
+#     print(a.text)
+
+
+# Задание 5.4.5
+# Используя полученные знания, допишите сделанный в начале юнита скрипт (где мы доставали заголовки новостей о Python с
+# Python.org) так, чтобы он показывал ещё и дату добавления новости.
+# Примечание: для получения атрибутов тега (т.е. его дополнительных параметров) используется метод .get(<имя атрибута>)
+import requests  # импортируем наш знакомый модуль
+# import lxml.html
+# from lxml import etree
+#
+# # создадим объект ElementTree. Он возвращается функцией parse()
+# tree = etree.parse('F:\Work\Vlad\Python\python_org\Welcome to Python.org.html', lxml.html.HTMLParser())
+# # попытаемся спарсить наш файл с помощью html-парсера. Сам html - это то, что мы скачали и поместили в папку из браузера.
+#
+# ul = tree.findall('/body/div/div[3]/div/section/div[2]/div[1]/div/ul/li')
+# # помещаем в аргумент метода findall скопированный xpath. Здесь мы получим все элементы списка новостей.
+# # (Все заголовки и их даты)
+#
+# # создаём цикл, в котором мы будем выводить название каждого элемента из списка
+# for li in ul:
+#     a = li.find('a')  # в каждом элементе находим, где хранится заголовок новости. У нас это тег <a>. Т. е.
+#                       # гиперссылка, на которую нужно нажать, чтобы перейти на страницу с новостью. (Гиперссылки
+#                       # в html это всегда тег <a>)
+#     news_time = li.find('time')
+#     print(news_time.get('datetime'), a.text)
+
+
+# Кеширование — это временное сохранение данных для дальнейшего доступа к ним.
+# Установка Redis
+
+# wsl --install запуск в windows powershell (не x68)
+
 
