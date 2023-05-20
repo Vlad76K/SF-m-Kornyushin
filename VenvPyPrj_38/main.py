@@ -3682,4 +3682,57 @@ import requests  # импортируем наш знакомый модуль
 
 # wsl --install запуск в windows powershell (не x68)
 
+# Задание 5.5.4
+# Напишите программу, которая будет записывать и кешировать номера телефонов ваших друзей.
+# Программа должна уметь воспринимать несколько команд:
+#  - записать номер;
+#  - показать номер друга в консоли при вводе имени;
+#  - удалить номер друга по имени.
+# Кеширование надо производить с помощью Redis. Ввод и вывод информации должен быть реализован через консоль (с помощью функций input() и print())
+import redis
+import json
+
+red = redis.Redis(
+    host='localhost',
+    port=6379
+)
+
+class PhoneBook:
+    def __init__(self, name, phone):
+        self.name = name
+        self.phone = phone
+
+    def set_dict_row(self):
+        dict1[self.name] = self.phone
+        red.set('dict1', json.dumps(dict1))  # с помощью функции dumps() из модуля json превратим наш словарь в строчку
+        converted_dict = json.loads(red.get('dict1'))  # с помощью знакомой нам функции превращаем данные,
+                                                       # полученные из кеша обратно в словарь
+        print(type(converted_dict))  # убеждаемся, что мы получили действительно словарь
+        print(converted_dict)  # ну и выводим его содержание
+    def get_dict_row(self):
+        print(dict1[self.name])
+    def del_dict_row(self):
+        dict1.pop(self.name)
+        print(dict1[self.name])
+
+pb = PhoneBook('name', 'phone')
+
+print('Какое действие хотите выполнить?\n1. Дополнить словарь\n2. Получить номер по ФИО\n3. Удалить номер из словаря')
+action = int(input('Введите цифру действия: '))
+
+dict1 = {}  # создаём словарь для записи
+
+if action == 1:  # Дополнить словарь
+    pb.name = input('Введите ФИО друга: ')
+    pb.phone = input('Введите номер друга: ')
+    pb.set_dict_row()
+    print('dict1: ', dict1)
+elif action == 2:  # Получить номер по ФИО
+    pb.name = input('Введите ФИО друга: ')
+    pb.get_dict_row()
+else:  # Удалить номер из словаря
+    pb.name = input('Введите ФИО друга: ')
+    pb.del_dict_row()
+
+
 
