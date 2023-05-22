@@ -3724,50 +3724,101 @@ import requests  # импортируем наш знакомый модуль
 #  - показать номер друга в консоли при вводе имени;
 #  - удалить номер друга по имени.
 # Кеширование надо производить с помощью Redis. Ввод и вывод информации должен быть реализован через консоль (с помощью функций input() и print())
-import redis
-import json
+# import redis
+# import json
+#
+# red = redis.Redis(
+#     host='localhost',
+#     port=6379
+# )
+#
+# class PhoneBook:
+#     def __init__(self, name, phone):
+#         self.name = name
+#         self.phone = phone
+#
+#     def set_dict_row(self):
+#         dict1[self.name] = self.phone
+#         red.set('dict1', json.dumps(dict1))  # с помощью функции dumps() из модуля json превратим наш словарь в строчку
+#         converted_dict = json.loads(red.get('dict1'))  # с помощью знакомой нам функции превращаем данные,
+#                                                        # полученные из кеша обратно в словарь
+#         print(type(converted_dict))  # убеждаемся, что мы получили действительно словарь
+#         print(converted_dict)  # ну и выводим его содержание
+#     def get_dict_row(self):
+#         print(dict1[self.name])
+#     def del_dict_row(self):
+#         dict1.pop(self.name)
+#         print(dict1[self.name])
+#
+# pb = PhoneBook('name', 'phone')
+#
+# print('Какое действие хотите выполнить?\n1. Дополнить словарь\n2. Получить номер по ФИО\n3. Удалить номер из словаря')
+# action = int(input('Введите цифру действия: '))
+#
+# dict1 = {}  # создаём словарь для записи
+#
+# if action == 1:  # Дополнить словарь
+#     pb.name = input('Введите ФИО друга: ')
+#     pb.phone = input('Введите номер друга: ')
+#     pb.set_dict_row()
+#     print('dict1: ', dict1)
+# elif action == 2:  # Получить номер по ФИО
+#     pb.name = input('Введите ФИО друга: ')
+#     pb.get_dict_row()
+# else:  # Удалить номер из словаря
+#     pb.name = input('Введите ФИО друга: ')
+#     pb.del_dict_row()
 
-red = redis.Redis(
-    host='localhost',
-    port=6379
-)
+# currency_dict = {'RUB': ['Российский рубль', 'рубль', 'рублей', 'Russian Ruble'],
+#                  'USD': ['Доллары сша', 'доллар', 'долларов', 'баксы', 'баксов', 'us dollar', 'US Dollar'],
+#                  'EUR': ['Евро', 'евро', 'евро', 'Euro'],
+#                  'CNY': ['Китайский юань', 'юань', 'юаней', 'Chinese Yuan Renminbi'],
+#                  }
+#
+# def find_dict_key(input_list):
+#     base = input_list[0]
+#     quote = input_list[1]
+#     amount = round(float(input_list[-1]), 2)
+#
+#     base_code = ''
+#     quote_code = ''
+#
+#     for dict_key, dict_values in currency_dict.items():
+#         if dict_key == base:
+#             print(dict_key, ' == ', base)
+#             base_code = base
+#         else:
+#             for i in range(len(dict_values)):
+#                 if dict_values[i] == base.lower():
+#                     base_code = dict_key
+#                     break
+#
+#         if dict_key == quote:
+#             print(dict_key, ' == ', quote)
+#         else:
+#             for i in range(len(dict_values)):
+#                 if dict_values[i] == quote.lower():
+#                     quote_code = dict_key
+#                     break
+#
+#     return [base_code, quote_code, amount]
+# # input_list = ['евро', 'доллары', '10']
+# input_list = ['EUR', 'RUB', '10']
+# print(find_dict_key(input_list))
 
-class PhoneBook:
-    def __init__(self, name, phone):
-        self.name = name
-        self.phone = phone
-
-    def set_dict_row(self):
-        dict1[self.name] = self.phone
-        red.set('dict1', json.dumps(dict1))  # с помощью функции dumps() из модуля json превратим наш словарь в строчку
-        converted_dict = json.loads(red.get('dict1'))  # с помощью знакомой нам функции превращаем данные,
-                                                       # полученные из кеша обратно в словарь
-        print(type(converted_dict))  # убеждаемся, что мы получили действительно словарь
-        print(converted_dict)  # ну и выводим его содержание
-    def get_dict_row(self):
-        print(dict1[self.name])
-    def del_dict_row(self):
-        dict1.pop(self.name)
-        print(dict1[self.name])
-
-pb = PhoneBook('name', 'phone')
-
-print('Какое действие хотите выполнить?\n1. Дополнить словарь\n2. Получить номер по ФИО\n3. Удалить номер из словаря')
-action = int(input('Введите цифру действия: '))
-
-dict1 = {}  # создаём словарь для записи
-
-if action == 1:  # Дополнить словарь
-    pb.name = input('Введите ФИО друга: ')
-    pb.phone = input('Введите номер друга: ')
-    pb.set_dict_row()
-    print('dict1: ', dict1)
-elif action == 2:  # Получить номер по ФИО
-    pb.name = input('Введите ФИО друга: ')
-    pb.get_dict_row()
-else:  # Удалить номер из словаря
-    pb.name = input('Введите ФИО друга: ')
-    pb.del_dict_row()
-
-
-
+class ExchangeBotException(Exception):
+    pass
+class AmountIncorrect(ExchangeBotException):
+    def __init__(self, amount):
+        self.amount = amount
+        super().__init__(f"Не корректно задана сумма: {amount}")
+try:
+    a = '2,30'
+    float(a)
+    b = 0
+    if True:
+        raise AmountIncorrect(a)
+except AmountIncorrect as err:
+    raise
+    # err.amount = a
+    # raise err
