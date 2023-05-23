@@ -22,9 +22,16 @@
 
 import requests
 from datetime import datetime
+from bs4 import BeautifulSoup as bs
 from rest_framework.exceptions import APIException
 from cfgtelegrambot import API_KEY
-from cfgtelegrambot import currency_dict
+
+# value[2] используется для чат бота - валюта в родительном падеже
+currency_dict = {'RUB': ['Российский рубль', 'рубль', 'рублей', 'Russian Ruble'],
+                 'USD': ['Доллары сша', 'доллары', 'долларов', 'доллар', 'баксы', 'баксов', 'us dollar', 'US Dollar'],
+                 'EUR': ['Евро', 'евро', 'евро', 'Euro'],
+                 'CNY': ['Китайский юань', 'юань', 'юаней', 'Chinese Yuan Renminbi'],
+                 }
 
 class ExchangeBotException(APIException):
     pass
@@ -64,6 +71,40 @@ class Exchange:
             price_datetime = datetime.fromtimestamp(data["timestamp"])
 
             return price_datetime, {quote : round(exchange_rate * amount, 2)}, [currency_dict[base][2], currency_dict[quote][2]]
+            # return price_datetime, exchange_rates, [base_rp, quote_rp]
+
+    @staticmethod
+    def get_exchange_convert_sum(base, quote, amount=1):  #  альтернативный вариант через BeautifulSoup
+        # создаем запрос к x-rates.com для получения валют и курсов
+        content = requests.get(f'https://www.x-rates.com/table/?from={base}&amount={amount}').content
+
+        # инициализируем beautifulsoup
+        soup = bs(content, 'html.parser')
+        # получаем дату-время последнего обновления курса
+        price_datetime = soup.find_all('span', attrs={'class': 'ratesTimestamp'})[1].text
+        # получаем таблицу курсов
+        exchange_tables = soup.find_all('table')
+        exchange_rates = {}
+        for exchange_table in exchange_tables:
+            for tr in exchange_table.find_all('tr'):
+                tds = tr.find_all('td')
+                if tds:
+                    for cur in range(len(currency_dict[quote])):  # ищем наименование валюты, заданной пользователем, в
+                                                                  # списке currency_dict (вводить могут по разному)
+                        if tds[0].text == currency_dict[quote][cur]:  #
+                            base_rp = currency_dict[base][2]
+                            quote_rp = currency_dict[quote][2]
+                            exchange_rate1 = round(float(tds[1].text), 2)  # курс base/quote
+                            exchange_rate2 = round(float(tds[2].text), 2)  # курс quote/base
+                            exchange_rates[quote] = exchange_rate1
+                            # print('tds[0]: ', tds[0])  # <td>US Dollar</td>
+                            # print('tds[1]: ', tds[1])  # <td class="rtRates"><a href="https://www.x-rates.com/graph/?from=RUB&amp;to=USD">12.418301</a></td>
+                            # print('tds[2]: ', tds[2])  # <td class="rtRates"><a href="https://www.x-rates.com/graph/?from=USD&amp;to=RUB">80.526314</a></td>
+
+                            return price_datetime, exchange_rates, [base_rp, quote_rp]
+                # else:  # если тег 'td' на найден в полученном ответе
+                #     raise JsonDecodIncorrect('https://www.x-rates.com/')
+        # return price_datetime, exchange_rates # если показывать все валюты
 
     @staticmethod
     def get_price(base, quote, amount):
@@ -109,7 +150,8 @@ class Exchange:
             raise
         else:
             # если ошибок не было - выполняем конвертацию
-            price_datetime, exchange_rates, curr_rp_list = Exchange.get_currency_rates(base_code, quote_code, amount)
+            price_datetime, exchange_rates, curr_rp_list = Exchange.get_exchange_convert_sum(base_code, quote_code, amount)
+            # print('exchange_rates: ', exchange_rates)
 
             return price_datetime, exchange_rates, curr_rp_list
         finally:
@@ -120,7 +162,20 @@ if __name__ == '__main__':
     # input_list = ['EUR', 'RUB', '10']
     base = input_list[0]
     quote = input_list[1]
-    amount = float(input_list[2])
+    amount = input_list[2]
+
+    print(Exchange.get_currency_rates('EUR', 'USD', 10))
 
     print(Exchange.get_price(base, quote, amount))
+
+# params = {'access_key': API_KEY, 'currencies': 'USD,EUR,RUB', 'format': 1}
+# params = {'access_key': API_KEY, 'currencies': quote, 'source':base, 'format': 1}
+# params = {'access_key': API_KEY, 'from': base, 'to':quote, 'amount': amount}
+
+# req_get = requests.get('http://apilayer.net/api/live', params = params)
+# req_get = requests.get('https://api.currencylayer.com/convert', params = params)
+
+# js = req_get.json()
+# print(js)
+
 

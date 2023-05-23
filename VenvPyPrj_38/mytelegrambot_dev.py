@@ -31,6 +31,9 @@ command_list = ['/start',     # старт
                 '/exchange',  # запуск конвертера валют
                 '/values'     # список доступных валют
                 ]
+currency_list = ['RUB - Российский рубль',
+                 'USD - Доллар США',
+                 'EUR - Евро']
 
 # Обрабатываются все сообщения, содержащие команду '/start'.
 @bot.message_handler(commands=['start',])
@@ -50,14 +53,23 @@ def handle_help(message):
                                       '/start - приветствие =)\n'
                                       '/help - помощь\n'
                                       '/valutes - список доступных валют')
+    # < имя валюты, цену которой он хочет узнать >
+    # < имя валюты, в которой надо узнать цену первой валюты >
+    # < количество первой валюты >
 
 # Обрабатываются все сообщения, содержащие команду '/valutes'.
 @bot.message_handler(commands=['valutes', ])
 def handle_valutes(message):
-    val_dict = []
-    for val_k, val_v in cfgtelegrambot.currency_dict.items():
-        val_dict.append(val_k + ' - ' + val_v[0])
-    bot.send_message(message.chat.id, 'Доступные валюты:\n' + '\n'.join(val_dict))
+    bot.send_message(message.chat.id, 'Доступные валюты:\n' + '\n'.join(currency_list))
+
+# Обрабатывается все документы и аудиозаписи
+# @bot.message_handler(content_types=['document', 'audio'])
+# def handle_docs_audio(message):
+#     pass
+#
+# @bot.message_handler(content_types=['photo',])
+# def handle_photo(message: telebot.types.Message):
+#     bot.reply_to(message, 'Nice meme XDD')
 
 @bot.message_handler(content_types=['text',])
 def handle_text(message):
@@ -69,7 +81,6 @@ def handle_text(message):
 
             ex = start_processing.Exchange([])
             date_rate, rate_value, rp_list = ex.get_price(base, quote, amount)
-            # bot.send_message(message.chat.id,f'{date_rate}, {rate_value}, {rp_list}')
             for r_code, r_value in rate_value.items():
                 bot.send_message(message.chat.id, f'{r_value} {rp_list[1]} за {amount} {rp_list[0]}\nДата обновления курса: {date_rate}')
     except start_processing.AmountIncorrect as err:
