@@ -20,9 +20,8 @@
 # + 11. Токен Telegram-бота хранить в специальном конфиге (можно использовать .py файл).
 # + 12. Все классы спрятать в файле extensions.py.
 
-import extensions as start_processing
+from ChatBot import extensions as start_processing, cfgtelegrambot
 import telebot
-import cfgtelegrambot
 
 bot = telebot.TeleBot(cfgtelegrambot.TOKEN)
 
