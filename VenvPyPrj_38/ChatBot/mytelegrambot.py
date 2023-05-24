@@ -20,7 +20,7 @@
 # + 11. Токен Telegram-бота хранить в специальном конфиге (можно использовать .py файл).
 # + 12. Все классы спрятать в файле extensions.py.
 
-import extensions as start_processing
+import extensions
 import telebot
 import cfgtelegrambot
 
@@ -67,18 +67,18 @@ def handle_text(message):
             quote = message.text.split()[1]   # валюта в которую пересчитываем
             amount = message.text.split()[2]  # необходимая сумма
 
-            ex = start_processing.Exchange([])
-            date_rate, rate_value, rp_list = ex.get_currency_rates(base, quote, amount)  # получение курсов
+            ex = extensions.Exchange([], base, quote, amount)
+            date_rate, rate_value, rp_list = ex.get_currency_rates()  # получение курсов
             for r_code, r_value in rate_value.items():
                 # выводим данные пользователю
                 bot.send_message(message.chat.id, f'{r_value} {rp_list[1]} за {amount} {rp_list[0]}\nДата обновления курса: {date_rate}')
-    except start_processing.AmountIncorrect as err:
+    except extensions.AmountIncorrect as err:
         bot.send_message(message.chat.id, err)
-    except start_processing.CurrentEqual as err:
+    except extensions.CurrentEqual as err:
         bot.send_message(message.chat.id, err)
-    except start_processing.CurrentNotFound as err:
+    except extensions.CurrentNotFound as err:
         bot.send_message(message.chat.id, err)
-    except start_processing.JsonDecodIncorrect as err:
+    except extensions.JsonDecodIncorrect as err:
         bot.send_message(message.chat.id, err)
     else:
         pass  # bot.send_message(message.chat.id, 'Все ок!')

@@ -50,8 +50,11 @@ class JsonDecodIncorrect(ExchangeBotException):
         super().__init__(f"Ошибки в обработке ответа с сайта курсов: {err_msg}")
 
 class Exchange:
-    def __init__(self, input_list): #, base, quote, amount):
+    def __init__(self, input_list, base, quote, amount):
         self.input_list = input_list
+        self.base = base
+        self.quote = quote
+        self.amount = amount
 
     @staticmethod
     def get_price(base, quote, amount=1): #get_currency_rates(base, quote, amount=1):
@@ -65,10 +68,10 @@ class Exchange:
 
             return price_datetime, {quote : round(exchange_rate * amount, 2)}, [currency_dict[base][2], currency_dict[quote][2]]
 
-    @staticmethod
-    def get_currency_rates(base, quote, amount=1): #get_price(base, quote, amount):
+    # @staticmethod
+    def get_currency_rates(self): #, base, quote, amount=1): #get_price(base, quote, amount):
         try:
-            amount = round(float(amount), 2)
+            amount = round(float(self.amount), 2)
             if amount <= 0:
                 raise AmountIncorrect(amount)
 
@@ -78,26 +81,26 @@ class Exchange:
             # определим буквенный ISO-код валюты (нужен для запроса курса)
             for dict_key, dict_values in currency_dict.items():
                 # код валюты, указанную сумму которой, нужно пересчитать
-                if dict_key == base:
-                    base_code = base
+                if dict_key == self.base:
+                    base_code = self.base
                 else:
                     for i in range(len(dict_values)):
-                        if dict_values[i] == base.lower():
+                        if dict_values[i] == self.base.lower():
                             base_code = dict_key
                             break
                 # код валюты в которую нужно пересчитать указанную пользователем сумму
-                if dict_key == quote:
-                    quote_code = quote
+                if dict_key == self.quote:
+                    quote_code = self.quote
                 else:
                     for i in range(len(dict_values)):
-                        if dict_values[i] == quote.lower():
+                        if dict_values[i] == self.quote.lower():
                             quote_code = dict_key
                             break
             # если какую-либо валюту не определили - вызываем эксепшн
             if base_code == '':
-                raise CurrentNotFound(base)
+                raise CurrentNotFound(self.base)
             if quote_code == '':
-                raise CurrentNotFound(quote)
+                raise CurrentNotFound(self.quote)
             if base_code == quote_code:
                 raise CurrentEqual()
 
@@ -121,6 +124,6 @@ if __name__ == '__main__':
     base = input_list[0]
     quote = input_list[1]
     amount = float(input_list[2])
-
-    print(Exchange.get_price(base, quote, amount))
+    ex = Exchange([], base, quote, amount)
+    print(ex.get_currency_rates())
 
