@@ -66,13 +66,6 @@ def handle_text(message):
             base = message.text.split()[0]    # валюта которую пересчитываем
             quote = message.text.split()[1]   # валюта в которую пересчитываем
             amount = message.text.split()[2]  # необходимая сумма
-
-            ex = extensions.Exchange([], base, quote, amount)
-            date_rate, rate_value, rp_list = ex.get_currency_rates()  # получение курсов
-            for r_code, r_value in rate_value.items():
-                # выводим данные пользователю
-                # bot.send_message(message.chat.id, f'{r_value} {rp_list[1]} за {amount} {rp_list[0]}\nДата обновления курса: {date_rate}')
-                bot.reply_to(message, f'{r_value} {rp_list[1]} за {amount} {rp_list[0]}\nДата обновления курса: {date_rate}')
     except extensions.AmountIncorrect as err:
         bot.send_message(message.chat.id, err)
     except extensions.CurrentEqual as err:
@@ -82,7 +75,14 @@ def handle_text(message):
     except extensions.JsonDecodIncorrect as err:
         bot.send_message(message.chat.id, err)
     else:
-        pass  # bot.send_message(message.chat.id, 'Все ок!')
+        ex = extensions.Exchange([], base, quote, amount)
+        date_rate, rate_value, rp_list = ex.get_currency_rates()  # получение курсов
+        for r_code, r_value in rate_value.items():
+            # выводим данные пользователю
+            # bot.send_message(message.chat.id, f'{r_value} {rp_list[1]} за {amount} {rp_list[0]}\nДата обновления курса: {date_rate}')
+            bot.reply_to(message,
+                         f'{r_value} {rp_list[1]} за {amount} {rp_list[0]}\nДата обновления курса: {date_rate}')
+        # pass  # bot.send_message(message.chat.id, 'Все ок!')
     finally:
         bot.send_message(message.chat.id, 'Спасибо Вам за использование нашего бота!')
 
