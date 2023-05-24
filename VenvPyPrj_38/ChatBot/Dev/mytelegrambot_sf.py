@@ -29,7 +29,7 @@ bot = telebot.TeleBot(cfgtelegrambot.TOKEN)
 
 command_list = ['/start',     # старт
                 '/help',      # помощь
-                '/exchange',  # запуск конвертера валют
+                '/convert',  # запуск конвертера валют
                 '/values'     # список доступных валют
                 ]
 
