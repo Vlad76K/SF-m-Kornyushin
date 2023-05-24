@@ -70,7 +70,7 @@ class Exchange:
     # @staticmethod
     def get_currency_rates(self): #, base, quote, amount=1): #get_price(base, quote, amount):
         try:
-            amount = round(float(self.amount), 2)
+            amount = round(float(self.amount.replace(',', '.')), 2)
             if amount <= 0:
                 raise AmountIncorrect(amount)
 
