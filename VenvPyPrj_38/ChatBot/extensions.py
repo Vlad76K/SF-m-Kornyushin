@@ -54,7 +54,7 @@ class Exchange:
         self.input_list = input_list
 
     @staticmethod
-    def get_currency_rates(base, quote, amount=1):
+    def get_price(base, quote, amount=1): #get_currency_rates(base, quote, amount=1):
         url = f"http://data.fixer.io/api/latest?access_key={API_KEY}&symbols={base},{quote}&format=1"
         data = requests.get(url).json()
         if data["success"]:
@@ -66,7 +66,7 @@ class Exchange:
             return price_datetime, {quote : round(exchange_rate * amount, 2)}, [currency_dict[base][2], currency_dict[quote][2]]
 
     @staticmethod
-    def get_price(base, quote, amount):
+    def get_currency_rates(base, quote, amount=1): #get_price(base, quote, amount):
         try:
             amount = round(float(amount), 2)
             if amount <= 0:
@@ -109,7 +109,7 @@ class Exchange:
             raise
         else:
             # если ошибок не было - выполняем конвертацию
-            price_datetime, exchange_rates, curr_rp_list = Exchange.get_currency_rates(base_code, quote_code, amount)
+            price_datetime, exchange_rates, curr_rp_list = Exchange.get_price(base_code, quote_code, amount)
 
             return price_datetime, exchange_rates, curr_rp_list
         finally:

@@ -36,14 +36,14 @@ command_list = ['/start',     # старт
 @bot.message_handler(commands=['start',])
 def handle_start(message):
     bot.send_message(message.chat.id, f'{message.from_user.first_name}, привет')  # message.chat.username -
-    bot.send_message(message.chat.id, 'Бот возвращает цену на определённое количество валюты (евро, доллар или рубль).\n'
+    bot.send_message(message.chat.id, 'Бот возвращает цену на определённое количество валюты (список можно посмотреть набрав команду /valutes).\n'
                                       'Напишите какую валюту в какую пересчитать и сумму '
                                       '(например: EUR RUB 10 или евро рубль 10)')
 
 # Обрабатываются все сообщения, содержащие команду '/help'.
 @bot.message_handler(commands=['help',])
 def handle_help(message):
-    bot.send_message(message.chat.id, 'Бот возвращает цену на определённое количество валюты (евро, доллар или рубль).\n'
+    bot.send_message(message.chat.id, 'Бот возвращает цену на определённое количество валюты (список можно посмотреть набрав команду /valutes).\n'
                                       'Напишите какую валюту в какую пересчитать и сумму '
                                       '(например: EUR RUB 10 или евро рубль 10)')
     bot.send_message(message.chat.id, 'Команды бота:\n'
@@ -68,9 +68,9 @@ def handle_text(message):
             amount = message.text.split()[2]  # необходимая сумма
 
             ex = start_processing.Exchange([])
-            date_rate, rate_value, rp_list = ex.get_price(base, quote, amount)
-            # bot.send_message(message.chat.id,f'{date_rate}, {rate_value}, {rp_list}')
+            date_rate, rate_value, rp_list = ex.get_currency_rates(base, quote, amount)  # получение курсов
             for r_code, r_value in rate_value.items():
+                # выводим данные пользователю
                 bot.send_message(message.chat.id, f'{r_value} {rp_list[1]} за {amount} {rp_list[0]}\nДата обновления курса: {date_rate}')
     except start_processing.AmountIncorrect as err:
         bot.send_message(message.chat.id, err)
