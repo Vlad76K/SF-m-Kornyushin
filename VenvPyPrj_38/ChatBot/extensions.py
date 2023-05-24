@@ -23,7 +23,7 @@
 import requests
 from datetime import datetime
 from rest_framework.exceptions import APIException
-from cfgtelegrambot import API_KEY, currency_dict
+from ChatBot.cfgtelegrambot import API_KEY, currency_dict
 
 class ExchangeBotException(APIException):
     pass
