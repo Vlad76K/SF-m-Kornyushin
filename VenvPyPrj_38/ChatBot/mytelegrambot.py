@@ -71,7 +71,8 @@ def handle_text(message):
             date_rate, rate_value, rp_list = ex.get_currency_rates()  # получение курсов
             for r_code, r_value in rate_value.items():
                 # выводим данные пользователю
-                bot.send_message(message.chat.id, f'{r_value} {rp_list[1]} за {amount} {rp_list[0]}\nДата обновления курса: {date_rate}')
+                # bot.send_message(message.chat.id, f'{r_value} {rp_list[1]} за {amount} {rp_list[0]}\nДата обновления курса: {date_rate}')
+                bot.reply_to(message, f'{r_value} {rp_list[1]} за {amount} {rp_list[0]}\nДата обновления курса: {date_rate}')
     except extensions.AmountIncorrect as err:
         bot.send_message(message.chat.id, err)
     except extensions.CurrentEqual as err:
