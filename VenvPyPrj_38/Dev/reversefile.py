@@ -52,7 +52,7 @@ class ReverseFile(io.IOBase):
             self.current_position = file.tell()
             yield file.read(delta)
 
-rev = ReverseFile("..\\input.txt")
+rev = ReverseFile("../../input.txt")
 print(rev.reversed_lines)
 for line in rev.reversed_lines():
     print(f'{line.strip()}')

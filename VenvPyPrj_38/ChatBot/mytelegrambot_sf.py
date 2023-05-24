@@ -80,14 +80,29 @@ def handle_quote(message: telebot.types.Message, base):
     bot.register_next_step_handler(message, handle_amount, base, message.text.split()[0])
 
 def handle_amount(message: telebot.types.Message, base, quote):
-    amount = message.text.split()[0]
-    bot.send_message(message.chat.id, f'{amount}, {base}, {quote}')
+    try:
+        amount = message.text.split()[0].replace(',', '.')
+        if float(amount) <= 0:
+            raise extensions.AmountIncorrect()
+        ex = extensions.Exchange([], base, quote, amount)
+        date_rate, rate_value, rp_list = ex.get_currency_rates()  # получение курсов
+    except ValueError as err:
+        bot.send_message(message.chat.id, err)
+    except extensions.AmountIncorrect as err:
+        bot.send_message(message.chat.id, err)
+    except extensions.CurrentEqual as err:
+        bot.send_message(message.chat.id, err)
+    except extensions.CurrentNotFound as err:
+        bot.send_message(message.chat.id, err)
+    except extensions.JsonDecodIncorrect as err:
+        bot.send_message(message.chat.id, err)
+    else:
+        for r_code, r_value in rate_value.items():
+            # выводим данные пользователю
+            bot.reply_to(message, f'{r_value} {rp_list[1]} за {amount} {rp_list[0]}\nДата обновления курса: {date_rate}')
+    finally:
+        pass
 
-    ex = extensions.Exchange([], base, quote, amount)
-    date_rate, rate_value, rp_list = ex.get_currency_rates()  # получение курсов
-    for r_code, r_value in rate_value.items():
-        # выводим данные пользователю
-        bot.reply_to(message, f'{r_value} {rp_list[1]} за {amount} {rp_list[0]}\nДата обновления курса: {date_rate}')
 
 bot.polling(none_stop=True)
 
