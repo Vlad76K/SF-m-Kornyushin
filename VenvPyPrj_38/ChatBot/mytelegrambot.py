@@ -6,7 +6,7 @@
 
 import ChatBot.extensions as extensions
 import telebot
-import ChatBot.cfgtelegrambot as cfgtelegrambot
+import ChatBot.config as cfgtelegrambot
 
 bot = telebot.TeleBot(cfgtelegrambot.TOKEN)
 

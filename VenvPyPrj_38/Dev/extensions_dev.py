@@ -24,7 +24,7 @@ import requests
 from datetime import datetime
 from bs4 import BeautifulSoup as bs
 from rest_framework.exceptions import APIException
-from ChatBot.cfgtelegrambot import API_KEY
+from ChatBot.config import API_KEY
 
 # value[2] используется для чат бота - валюта в родительном падеже
 currency_dict = {'RUB': ['Российский рубль', 'рубль', 'рублей', 'Russian Ruble'],

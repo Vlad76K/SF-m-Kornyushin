@@ -6,7 +6,7 @@
 
 import ChatBot.extensions as extensions
 import telebot
-import ChatBot.cfgtelegrambot as cfgtelegrambot
+import ChatBot.config as cfgtelegrambot
 from telebot import types
 
 bot = telebot.TeleBot(cfgtelegrambot.TOKEN)
@@ -40,6 +40,7 @@ def handle_help(message):
     bot.send_message(message.chat.id, 'Команды бота:\n'
                                       '/start - приветствие =)\n'
                                       '/help - помощь\n'
+                                      '/convert - запуск конвертера\n'
                                       '/valutes - список доступных валют')
 
 # Обрабатываются все сообщения, содержащие команду '/valutes'.
