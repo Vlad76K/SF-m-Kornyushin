@@ -61,20 +61,7 @@ class Exchange:
         self.input_list = input_list
 
     @staticmethod
-    def get_currency_rates(base, quote, amount=1):
-        url = f"http://data.fixer.io/api/latest?access_key={API_KEY}&symbols={base},{quote}&format=1"
-        data = requests.get(url).json()
-        if data["success"]:
-            rates = data["rates"]
-
-            exchange_rate = 1 / rates[base] * rates[quote]
-            price_datetime = datetime.fromtimestamp(data["timestamp"])
-
-            return price_datetime, {quote : round(exchange_rate * amount, 2)}, [currency_dict[base][2], currency_dict[quote][2]]
-            # return price_datetime, exchange_rates, [base_rp, quote_rp]
-
-    @staticmethod
-    def get_exchange_convert_sum(base, quote, amount=1):  #  альтернативный вариант через BeautifulSoup
+    def get_convert_sum(base, quote, amount=1):  #  альтернативный вариант через BeautifulSoup
         # создаем запрос к x-rates.com для получения валют и курсов
         content = requests.get(f'https://www.x-rates.com/table/?from={base}&amount={amount}').content
 
@@ -150,7 +137,7 @@ class Exchange:
             raise
         else:
             # если ошибок не было - выполняем конвертацию
-            price_datetime, exchange_rates, curr_rp_list = Exchange.get_exchange_convert_sum(base_code, quote_code, amount)
+            price_datetime, exchange_rates, curr_rp_list = Exchange.get_convert_sum(base_code, quote_code, amount)
             # print('exchange_rates: ', exchange_rates)
 
             return price_datetime, exchange_rates, curr_rp_list
@@ -164,8 +151,7 @@ if __name__ == '__main__':
     quote = input_list[1]
     amount = input_list[2]
 
-    print(Exchange.get_currency_rates('EUR', 'USD', 10))
-
+    # print(Exchange.get_currency_rates('EUR', 'USD', 10))
     print(Exchange.get_price(base, quote, amount))
 
 # params = {'access_key': API_KEY, 'currencies': 'USD,EUR,RUB', 'format': 1}
