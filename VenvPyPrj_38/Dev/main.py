@@ -3806,49 +3806,13 @@ import requests  # импортируем наш знакомый модуль
 # input_list = ['EUR', 'RUB', '10']
 # print(find_dict_key(input_list))
 
-import json
-import lxml.html
-from lxml import etree
-from bs4 import BeautifulSoup as bs
+# DJANGO
+# Чтобы создать статическую страницу нужно:
+# Установить приложение (плагин) из встроенного пакета Django (добавить все необходимые конфиги в настройки и URL).
+# Создать админа.
+# Через админ-панель создать статические HTML-странички.
+# При желании можно завернуть эти странички в определённый шаблон, но если его не указывать, то по умолчанию контент и
+# название должны находится в шаблоне flatpages/default.html (убедитесь, что вы создали его, иначе на статическую
+# страницу, которую вы создали, вы можете не попасть из-за ошибки).
 
-def test_json():  #, base, quote, amount=1):
-
-    # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    req_get = requests.get('https://ya.ru/')
-    resp_txt = json.loads(req_get.content)[keys[base]]
-
-
-
-
-
-
-    #  /html/body/main/div[2]/div/div/a[1]/span
-    req_get = requests.get('https://ya.ru/')
-    print(req_get, ' --- ', req_get.text)
-    b_s = bs(req_get.content, 'lxml')  #'html.parser')  #
-    temp = b_s.find_all('span') #, attrs={'class': 'home-link2 informers3__stocks-item home-link2_color_gray home-link2_hover_secondary'})
-    # '/body/main/div[2]/div/div/a[1]/span'
-    # temp = bs.find('a', 'USD&nbsp') # <span>USD&nbsp;80,31</span>
-    # for li in b_s:
-    print(temp)
-
-test_json()
-
-
-
-
-    # tree = etree.parse('F:\Work\Vlad\Python\Итоговый проект\Яндекс.html', lxml.html.HTMLParser())
-    # wl = tree.find_all('/body/main/div[2]/div/div/')  #, attrs={'class': 'home-link2 informers3__stocks-item home-link2_color_gray home-link2_hover_secondary'})
-    # print('wl: ', wl)
-    # for li in wl:
-    #     a = li.find('a')
-    #     print('--- ', etree.tostring(a, encoding='unicode'))
-    #     print('a: ', a.text)
-
-
-    # class ="home-link2 informers3__stocks-item home-link2_color_gray home-link2_hover_secondary" href="https://yandex.ru/search/?clid=2270456&amp;lr=20728&amp;text=USD+MOEX&amp;win=569&amp;wiz=finance" title="USD MOEX" target="_blank" rel="noopener" data-statlog="informers.stocks.item.2002" data-statlog-showed="1" > < span > USD & nbsp;80, 31 < / span > < / a >
-
-    # print(req_get['/html/body/main/div[2]/div/div/a[1]/span'])
-    # js = json.loads(req_get.text)
-    # print(js)
 
