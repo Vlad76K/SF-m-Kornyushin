@@ -1,5 +1,5 @@
 TOKEN = 'your_token_here'
-API_KEY = '39001c349c1e666f15052e80fd43056f'
+API_KEY = 'your_apikey_here'
 
 # value[2] используется для чат бота - валюта в родительном падеже
 currency_dict = {'RUB': ['Российский рубль', 'рубль', 'рублей', 'Russian Ruble'],
